@@ -1,16 +1,29 @@
-![OptiAlgo Logo](OptiAlgo.png)
-
-# OptiAlgo (Sedang Dalam Pengembangan)
-
+# OptiAlgo
 OptiAlgo adalah sebuah proyek yang masih dalam tahap pengembangan. Proyek ini bertujuan untuk menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual. Dengan OptiAlgo, pengguna dapat dengan mudah mencari algoritma yang paling sesuai dengan kebutuhan mereka, memberikan fleksibilitas yang diperlukan untuk menangani berbagai jenis masalah data dengan efisien.
 
 ## Fitur Utama
+1. Mencari Algoritma Terbaik
+2. Set Model
+3. Prediksi
+4. Tuning HyperParameter
 
-...
 
 ## Cara Menggunakan
+```py
+import pandas as pd
+from src import Classification
 
-...
+df = pd.read_csv('dataset_ex/drug200.csv')
+features = ['Age','Sex','BP','Cholesterol',"Na_to_K"]
+target = 'Drug'
+
+clf = Classification()
+clf.fit(data=df,target=target,features=features)
+result = clf.compare_model(output='dataframe')
+print(result)
+```
+untuk lebih lengkap nya anda bisa temukan pada notebook [example](/example.ipynb)
+
 
 ## Cara Berkontribusi
 Kami sangat menyambut kontribusi dari komunitas untuk meningkatkan dan mengembangkan OptiAlgo. Berikut adalah langkah-langkah umum untuk berkontribusi:
