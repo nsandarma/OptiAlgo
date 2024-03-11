@@ -266,7 +266,10 @@ class Parent(object):
         """
         # Melakukan serialisasi objek model menggunakan modul pickle
         return pickle.dumps(self)
-
+    
+    def not_found(self,attr:str):
+        if not hasattr(self,attr):
+            raise ValueError(f'{attr} not found')
     # Getter
     @property
     def get_X(self):
@@ -286,23 +289,15 @@ class Parent(object):
 
     @property
     def get_params_from_model(self):
-        if not self.model:
-            return None
+        self.not_found('model')
         return self.model[1].get_params()
 
     @property
     def get_result_compare_models(self):
-        if not hasattr(self, "result_compare_models"):
-            return None
+        self.not_found("result_compare_models")
+        
         return self.result_compare_models
 
     @property
     def get_list_models(self):
         return list(self.ALGORITHM.keys())
-
-    @property
-    def get_params_required(self):
-        if not hasattr(self, "model"):
-            return "None"
-        # return self.model[1]
-        pass
