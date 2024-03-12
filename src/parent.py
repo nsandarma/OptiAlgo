@@ -1,6 +1,6 @@
 from sklearn.model_selection import train_test_split
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler,LabelEncoder
 import pandas as pd
 import pickle
 from sklearn.metrics import (
@@ -9,11 +9,45 @@ from sklearn.metrics import (
     mean_absolute_percentage_error,
     mean_squared_error,
 )
+from abc import ABC, abstractmethod
 
 
-class Parent(object):
+class Parent(ABC):
+    @abstractmethod
     def __str__(self) -> str:
-        return "<OptiAlgo>"
+        ...
+    
+    
+    @abstractmethod
+    def compare_model(self):
+        ...
+        
+    @abstractmethod
+    def find_best_model(self):
+        ...
+    
+    
+    def encoding(data):
+        encoders = {}
+        for i in data.columns:
+            if data[i].dtype == 'object':
+                encoder = LabelEncoder().fit(data[i])
+                data[i] = encoder.transform(data[i])
+                encoders[i] = encoder
+        return data,encoders
+    
+    def decoding(data,encoder):
+        data = data.copy()
+        for i in encoder:
+            data[i] = encoder[i].inverse_transform(data[i])
+        return data
+
+    def encoding_predict(data,encoder):
+        data = data.copy()
+        for i in encoder:
+            data[i] = encoder[i].transform(data[i])
+        return data
+        
 
     def fit(
         self,
@@ -24,31 +58,17 @@ class Parent(object):
         split_data=0.2,
         all_data_train=False,
     ):
-        """
-        Melatih model dengan data yang diberikan.
-
-        Parameters:
-            data (pd.DataFrame): Data yang akan digunakan untuk melatih model.
-            target (str): Nama kolom yang merupakan target prediksi.
-            features (list): Daftar nama kolom yang akan digunakan sebagai fitur.
-            norm (bool, optional): Jika True, fitur-fitur akan dinormalisasi menggunakan MinMaxScaler. Defaultnya adalah True.
-            split_data (float, optional): Persentase data yang akan digunakan sebagai data uji jika `all_data_train` adalah False. Defaultnya adalah 0.2.
-            all_data_train (bool, optional): Jika True, semua data akan digunakan sebagai data latih tanpa pemisahan. Defaultnya adalah False.
-
-        Returns:
-            self: Instance dari objek model yang telah dilatih.
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Melatih model dengan data yang diberikan
-            model.fit(data=my_data, target="label", features=["feature1", "feature2"], norm=True, split_data=0.2, all_data_train=False)
-        """
 
         # Memasukkan data, fitur, dan target ke dalam objek model
-        self.data = data
-        self.X = pd.get_dummies(data[features]).values
+        self.norm = norm
+        self.data = data[features]
+
+    
+        X,data_encoder = Parent.encoding(data[features].copy())
+        self.data_encoder = data_encoder
+        
+        self.X = X.values
+        self.encoded_cols = list(self.data_encoder.keys())
         self.y = data[target].values
 
         # Normalisasi fitur jika diminta
@@ -86,28 +106,7 @@ class Parent(object):
         return self
 
     def score(self, y_test, y_pred):
-        """
-        Menghitung skor evaluasi model berdasarkan prediksi dan nilai sebenarnya.
 
-        Parameters:
-            y_test (array-like): Nilai target sebenarnya.
-            y_pred (array-like): Nilai yang diprediksi oleh model.
-
-        Returns:
-            dict: Skor evaluasi model. Untuk model klasifikasi, akan mengembalikan laporan klasifikasi dalam bentuk kamus.
-                  Untuk model regresi, akan mengembalikan metrik evaluasi yang terdiri dari MAE (Mean Absolute Error),
-                  MAPE (Mean Absolute Percentage Error), dan MSE (Mean Squared Error).
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Membuat prediksi dengan model
-            y_pred = model.predict(X_test)
-
-            # Menghitung skor evaluasi model
-            evaluation_scores = model.score(y_test, y_pred)
-        """
         if self.model_type == "Classification":
             return classification_report(y_true=y_test, y_pred=y_pred, output_dict=True)
         elif self.model_type == "Regression":
@@ -116,24 +115,8 @@ class Parent(object):
                 "MAPE": mean_absolute_percentage_error(y_pred=y_pred, y_true=y_test),
                 "MSE": mean_squared_error(y_pred=y_pred, y_true=y_test),
             }
-
     def set_model(self, algo_name):
-        """
-        Mengatur model dengan algoritma yang telah ditentukan.
 
-        Parameters:
-            algo_name (str): Nama algoritma yang akan digunakan untuk model.
-
-        Returns:
-            self: Instance dari objek model yang telah diatur dengan model baru.
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Mengatur model dengan algoritma yang ditentukan
-            model.set_model("RandomForestClassifier")
-        """
         try:
             # Memeriksa apakah algoritma tersedia dalam daftar yang telah ditentukan
             if algo_name in self.ALGORITHM:
@@ -149,25 +132,6 @@ class Parent(object):
             return self
 
     def hyperparameters(self, params):
-        """
-        Menyetel hyperparameter model dan mengembalikan laporan klasifikasi.
-
-        Parameters:
-            params (dict): Hyperparameter yang akan disetel untuk model.
-
-        Returns:
-            dict: Laporan klasifikasi berdasarkan prediksi menggunakan model dengan hyperparameter yang telah disetel.
-
-        Raises:
-            ValueError: Jika model tidak ditemukan atau jika ada parameter yang dibutuhkan yang tidak disediakan.
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Menyetel hyperparameter model dan mengembalikan laporan klasifikasi
-            hyperparameter_report = model.hyperparameters(params={"n_estimators": 100, "max_depth": 5})
-        """
         # Memeriksa apakah model telah diatur sebelumnya
         if not hasattr(self, "model"):
             raise ValueError("Model algorithm not found")
@@ -203,37 +167,21 @@ class Parent(object):
         # Mengembalikan laporan klasifikasi berdasarkan prediksi
         return self.score(y_test=self.y_test, y_pred=pred)
 
-    def predict(self, X_test, output=None):
-        """
-        Melakukan prediksi menggunakan model yang telah diatur sebelumnya.
-
-        Parameters:
-            X_test (array-like or DataFrame): Data uji yang akan diprediksi.
-            output (str, optional): Jika "dataframe", hasil prediksi akan dikembalikan dalam bentuk DataFrame. Defaultnya adalah None.
-
-        Returns:
-            array-like, DataFrame, or str: Hasil prediksi. Jika output adalah "dataframe", hasil prediksi akan dikembalikan dalam bentuk DataFrame.
-                                            Jika model belum diatur sebelumnya, akan mengembalikan "None".
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Mengatur model dengan algoritma yang ditentukan
-            model.set_model("RandomForestClassifier")
-
-            # Melakukan prediksi menggunakan data uji
-            predictions = model.predict(X_test)
-
-            # Melakukan prediksi dan mengembalikan hasil dalam bentuk DataFrame
-            predictions_df = model.predict(X_test, output="dataframe")
-        """
+    def predict(self, X_test:pd.DataFrame, output=None):
         # Memeriksa apakah model telah diatur sebelumnya
         if not hasattr(self, "model"):
-            return "None"
+            raise NotImplementedError("Model Not Define")
+        if X_test.shape[1] != self.X.shape[1]:
+            raise ValueError("The number of features in the test data is not equal to the number of features in the training data.")
+
+        X_test = Parent.encoding_predict(data=X_test,encoder=self.data_encoder)
+        X_test = X_test.values
 
         # Melakukan normalisasi data uji menggunakan scaler yang telah disimpan
-        X_test = self.scaler.transform(X_test)
+        if X_test is not self.X_test:
+            if self.norm:
+                X_test = self.scaler.transform(X_test)
+            
 
         # Melakukan prediksi menggunakan model yang telah diatur
         pred = self.model[1].predict(X_test)
@@ -251,25 +199,13 @@ class Parent(object):
         return pred
 
     def save_model(self):
-        """
-        Menyimpan model ke dalam bentuk serialisasi menggunakan modul pickle.
-
-        Returns:
-            bytes: Objek model yang telah diserialisasi.
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Menyimpan model ke dalam bentuk serialisasi
-            serialized_model = model.save_model()
-        """
         # Melakukan serialisasi objek model menggunakan modul pickle
         return pickle.dumps(self)
     
     def not_found(self,attr:str):
         if not hasattr(self,attr):
             raise ValueError(f'{attr} not found')
+        
     # Getter
     @property
     def get_X(self):
@@ -295,9 +231,13 @@ class Parent(object):
     @property
     def get_result_compare_models(self):
         self.not_found("result_compare_models")
-        
         return self.result_compare_models
 
     @property
     def get_list_models(self):
         return list(self.ALGORITHM.keys())
+    
+    @property
+    def get_algorithm_from_find_best_model(self):
+        self.not_found("best_algorithm")
+        return self.best_algorithm
