@@ -1,6 +1,6 @@
 from sklearn.model_selection import train_test_split
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler,LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import pandas as pd
 import pickle
 from sklearn.metrics import (
@@ -14,40 +14,34 @@ from abc import ABC, abstractmethod
 
 class Parent(ABC):
     @abstractmethod
-    def __str__(self) -> str:
-        ...
-    
-    
+    def __str__(self) -> str: ...
+
     @abstractmethod
-    def compare_model(self):
-        ...
-        
+    def compare_model(self): ...
+
     @abstractmethod
-    def find_best_model(self):
-        ...
-    
-    
+    def find_best_model(self): ...
+
     def encoding(data):
         encoders = {}
         for i in data.columns:
-            if data[i].dtype == 'object':
+            if data[i].dtype == "object":
                 encoder = LabelEncoder().fit(data[i])
                 data[i] = encoder.transform(data[i])
                 encoders[i] = encoder
-        return data,encoders
-    
-    def decoding(data,encoder):
+        return data, encoders
+
+    def decoding(data, encoder):
         data = data.copy()
         for i in encoder:
             data[i] = encoder[i].inverse_transform(data[i])
         return data
 
-    def encoding_predict(data,encoder):
+    def encoding_predict(data, encoder):
         data = data.copy()
         for i in encoder:
             data[i] = encoder[i].transform(data[i])
         return data
-        
 
     def fit(
         self,
@@ -63,10 +57,9 @@ class Parent(ABC):
         self.norm = norm
         self.data = data[features]
 
-    
-        X,data_encoder = Parent.encoding(data[features].copy())
+        X, data_encoder = Parent.encoding(data[features].copy())
         self.data_encoder = data_encoder
-        
+
         self.X = X.values
         self.encoded_cols = list(self.data_encoder.keys())
         self.y = data[target].values
@@ -115,6 +108,7 @@ class Parent(ABC):
                 "MAPE": mean_absolute_percentage_error(y_pred=y_pred, y_true=y_test),
                 "MSE": mean_squared_error(y_pred=y_pred, y_true=y_test),
             }
+
     def set_model(self, algo_name):
 
         try:
@@ -167,21 +161,22 @@ class Parent(ABC):
         # Mengembalikan laporan klasifikasi berdasarkan prediksi
         return self.score(y_test=self.y_test, y_pred=pred)
 
-    def predict(self, X_test:pd.DataFrame, output=None):
+    def predict(self, X_test: pd.DataFrame, output=None):
         # Memeriksa apakah model telah diatur sebelumnya
         if not hasattr(self, "model"):
             raise NotImplementedError("Model Not Define")
         if X_test.shape[1] != self.X.shape[1]:
-            raise ValueError("The number of features in the test data is not equal to the number of features in the training data.")
+            raise ValueError(
+                "The number of features in the test data is not equal to the number of features in the training data."
+            )
 
-        X_test = Parent.encoding_predict(data=X_test,encoder=self.data_encoder)
+        X_test = Parent.encoding_predict(data=X_test, encoder=self.data_encoder)
         X_test = X_test.values
 
         # Melakukan normalisasi data uji menggunakan scaler yang telah disimpan
         if X_test is not self.X_test:
             if self.norm:
                 X_test = self.scaler.transform(X_test)
-            
 
         # Melakukan prediksi menggunakan model yang telah diatur
         pred = self.model[1].predict(X_test)
@@ -201,11 +196,11 @@ class Parent(ABC):
     def save_model(self):
         # Melakukan serialisasi objek model menggunakan modul pickle
         return pickle.dumps(self)
-    
-    def not_found(self,attr:str):
-        if not hasattr(self,attr):
-            raise ValueError(f'{attr} not found')
-        
+
+    def not_found(self, attr: str):
+        if not hasattr(self, attr):
+            raise ValueError(f"{attr} not found")
+
     # Getter
     @property
     def get_X(self):
@@ -225,7 +220,7 @@ class Parent(ABC):
 
     @property
     def get_params_from_model(self):
-        self.not_found('model')
+        self.not_found("model")
         return self.model[1].get_params()
 
     @property
@@ -236,7 +231,7 @@ class Parent(ABC):
     @property
     def get_list_models(self):
         return list(self.ALGORITHM.keys())
-    
+
     @property
     def get_algorithm_from_find_best_model(self):
         self.not_found("best_algorithm")
