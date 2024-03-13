@@ -12,6 +12,28 @@ from sklearn.metrics import (
 from abc import ABC, abstractmethod
 
 
+def handling_missing_values(data:pd.DataFrame,imputation=None) -> pd.DataFrame:
+    miss_value = data.isna().sum().to_dict()
+    miss_value = {column: value for column, value in miss_value.items() if value != 0}
+    data = data.copy()
+    if imputation is None:
+        for i in miss_value:
+            if data[i].dtype == 'object':
+                val = data[i].mode()[0]
+                data[i] = data[i].fillna(val)
+            elif data[i].dtype in ['int64','int32','float64','float32']:
+                val = data[i].median()
+                data[i] = data[i].fillna(val)
+            else:
+                raise ValueError("Not Defined") 
+    elif imputation == "drop":
+        data = data.dropna()
+    else:
+        for i in miss_value:
+            data[i] = data.fillna(imputation[i]) 
+
+    return data   
+
 class Parent(ABC):
     @abstractmethod
     def __str__(self) -> str: ...
@@ -52,10 +74,12 @@ class Parent(ABC):
         split_data=0.2,
         all_data_train=False,
     ):
-
+        self.data = data[features]
+        if sum(data.isna().sum().values) > 0 :
+            miss_value = {column: value for column, value in data.isna().sum().items() if value != 0}
+            raise ValueError(f"Missing Value in {miss_value}")
         # Memasukkan data, fitur, dan target ke dalam objek model
         self.norm = norm
-        self.data = data[features]
 
         X, data_encoder = Parent.encoding(data[features].copy())
         self.data_encoder = data_encoder
