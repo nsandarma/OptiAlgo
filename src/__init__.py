@@ -1,2 +1,3 @@
-from .parent import Parent
+from .parent import *
 from .classification import Classification
+
