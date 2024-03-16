@@ -1,38 +1,14 @@
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, KFold, train_test_split,StratifiedKFold
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder,TargetEncoder
 import pandas as pd
 import pickle
-from sklearn.metrics import (
-    classification_report,
-    mean_absolute_error,
-    mean_absolute_percentage_error,
-    mean_squared_error,
-)
 from abc import ABC, abstractmethod
 
 
-def handling_missing_values(data:pd.DataFrame,imputation=None) -> pd.DataFrame:
-    miss_value = data.isna().sum().to_dict()
-    miss_value = {column: value for column, value in miss_value.items() if value != 0}
-    data = data.copy()
-    if imputation is None:
-        for i in miss_value:
-            if data[i].dtype == 'object':
-                val = data[i].mode()[0]
-                data[i] = data[i].fillna(val)
-            elif data[i].dtype in ['int64','int32','float64','float32']:
-                val = data[i].median()
-                data[i] = data[i].fillna(val)
-            else:
-                raise ValueError("Not Defined") 
-    elif imputation == "drop":
-        data = data.dropna()
-    else:
-        for i in miss_value:
-            data[i] = data.fillna(imputation[i]) 
+import warnings
+warnings.filterwarnings('always')  
 
-    return data   
 
 class Parent(ABC):
     @abstractmethod
@@ -44,26 +20,94 @@ class Parent(ABC):
     @abstractmethod
     def find_best_model(self): ...
 
-    def encoding(data):
-        encoders = {}
-        for i in data.columns:
-            if data[i].dtype == "object":
-                encoder = LabelEncoder().fit(data[i])
-                data[i] = encoder.transform(data[i])
-                encoders[i] = encoder
-        return data, encoders
+    @abstractmethod
+    def score(self, y_true, y_pred): ...
 
-    def decoding(data, encoder):
-        data = data.copy()
-        for i in encoder:
-            data[i] = encoder[i].inverse_transform(data[i])
-        return data
+    def check_imbalance(dataset:pd.DataFrame, target_column):
+        # Hitung distribusi kelas target
+        class_distribution = dataset[target_column].value_counts(normalize=True)
+        
+        # Periksa apakah salah satu kelas memiliki persentase di bawah ambang batas
+        imbalance_threshold = 0.09  # Anda dapat menyesuaikan ambang batas sesuai kebutuhan
+        imbalance_info = ""
+        for class_label, percentage in class_distribution.items():
+            if percentage < imbalance_threshold:
+                imbalance_info += f"The {class_label} class has an imbalance of {percentage*100:.2f}%.\n"
+        
+        if imbalance_info == "":
+            imbalance_info = "Dataset is balanced."
+        else:
+            imbalance_info += "Consider handling class imbalance."
+        return imbalance_info
 
-    def encoding_predict(data, encoder):
+    def handling_missing_values(self,data:pd.DataFrame,imputation=None,inplace=False) -> pd.DataFrame:
+        miss_value = data.isna().sum().to_dict()
+        miss_value = {column: value for column, value in miss_value.items() if value != 0}
         data = data.copy()
-        for i in encoder:
-            data[i] = encoder[i].transform(data[i])
+        if imputation is None:
+            for i in miss_value:
+                if data[i].dtype == 'object':
+                    val = data[i].mode()[0]
+                    data[i] = data[i].fillna(val)
+                elif data[i].dtype in ['int64','int32','float64','float32']:
+                    val = data[i].median()
+                    data[i] = data[i].fillna(val)
+                else:
+                    raise ValueError("Not Defined") 
+        elif imputation == "drop":
+            data = data.dropna()
+        else:
+            for i in miss_value:
+                data[i] = data.fillna(imputation[i]) 
+        if inplace:
+            self.data = data
+            return self
+        else:
+            return data   
+
+    def encoding(data:pd.DataFrame,features_cat:str,target:str):
+        target_encoder = TargetEncoder().fit(data[features_cat],data[target])
+        X = target_encoder.transform(data[features_cat])
+        for i,v in enumerate(features_cat):
+            data[v] = X[:,i]
+        data = data.drop(columns=[target])
+        return data,target_encoder
+    def encoding_predict(encoder,X_test,features_cat):
+        X = encoder.transform(X_test[features_cat])
+        for i,v in enumerate(features_cat):
+            X_test[v] =  X[:,1]
+        return X_test
+        
+
+    def decoding(data:pd.DataFrame,data_categories):
+        for i in data_categories.columns:
+            data[i] = data_categories[i]
         return data
+    
+    def check_col_categories(self,data:pd.DataFrame):
+        i = []
+        for j in data.columns:
+            if data[j].dtype == 'object':
+                i.append(j)
+        return i
+
+    def split_data(self,train_size):
+        return train_test_split(self.X,self.y,random_state=self.seed,train_size=train_size,stratify=self.y)
+
+    def find_best_params(self,algo_name,param_grid,X_train=None,y_train=None,n_splits=5):
+        if algo_name not in self.ALGORITHM.keys():
+            raise ValueError("Algorithm not found in the list.")
+        if X_train == None and y_train == None:
+            X_train = self.X
+            y_train = self.y
+        alg = self.ALGORITHM[algo_name]()
+        if algo_name == 'Logistic Regression':
+            alg = self.ALGORITHM[algo_name](max_iter=3000)
+        kfold = StratifiedKFold(n_splits=n_splits,shuffle=True,random_state=self.seed)
+        clf = GridSearchCV(estimator=alg,param_grid=param_grid,cv=kfold,scoring='accuracy')
+        clf.fit(X_train,y_train)
+        return clf.best_params_,clf.best_score_
+
 
     def fit(
         self,
@@ -71,76 +115,65 @@ class Parent(ABC):
         target: str,
         features: list,
         norm=True,
-        split_data=0.2,
-        all_data_train=False,
+        seed=42
     ):
+        data = data.copy()
         self.data = data[features]
+        self.features = features
+        self.seed = seed
+
+        # Missing Values Handler
         if sum(data.isna().sum().values) > 0 :
             miss_value = {column: value for column, value in data.isna().sum().items() if value != 0}
             raise ValueError(f"Missing Value in {miss_value}")
-        # Memasukkan data, fitur, dan target ke dalam objek model
-        self.norm = norm
 
-        X, data_encoder = Parent.encoding(data[features].copy())
-        self.data_encoder = data_encoder
+        # Check Imbalance
+        status_imbalance = False
+        if Parent.check_imbalance(data,target) == "Dataset is balanced.":
+           status_imbalance = True 
+        self.status_imbalance = status_imbalance
+        
+        # Encoding Columns
+        if any(self.check_col_categories(data[features])):
+            data_categories = data[features].select_dtypes('object')
+            cols_categories = data_categories.columns.tolist()
+            X,encoder = Parent.encoding(data=data,features_cat=cols_categories,target=target)
+            self.X_encoder = encoder
+            self.cols_encoded = cols_categories
+            self.data_categories = data_categories
+        X = data[features]
 
-        self.X = X.values
-        self.encoded_cols = list(self.data_encoder.keys())
-        self.y = data[target].values
+        y = data[target].values
+        if data[target].dtype == object:
+            labelencoder = LabelEncoder().fit(y)
+            y = labelencoder.transform(y)
+            self.y_encoder = labelencoder
 
-        # Normalisasi fitur jika diminta
+        # Features Norm
         if norm:
             scaler = MinMaxScaler()
-            scaler.fit(self.X)
-            self.X_transform = scaler.transform(self.X)
+            scaler.fit(X.values)
+            X = scaler.transform(X.values)
             self.scaler = scaler
-            X = self.X_transform
         else:
-            self.X_transform = None
-            X = self.X
+            X = X.values
 
-        # Memisahkan data menjadi data latih dan data uji
-        if not all_data_train:
-            X_train, X_test, y_train, y_test = train_test_split(
-                X, self.y, test_size=split_data, random_state=42
-            )
-        else:
-            X_train, y_train = self.X, self.y
-            X_test, y_test = None, None
+        self.X = X
+        self.y = y
+        self.norm = norm
 
-        # Menyimpan data latih dan data uji
-        self.X_train, self.y_train, self.X_test, self.y_test = (
-            X_train,
-            y_train,
-            X_test,
-            y_test,
-        )
-
-        # Menyimpan parameter dan persentase pemisahan data
         self.params = None
-        self.split_data = split_data
-
         return self
 
-    def score(self, y_test, y_pred):
 
-        if self.model_type == "Classification":
-            return classification_report(y_true=y_test, y_pred=y_pred, output_dict=True)
-        elif self.model_type == "Regression":
-            return {
-                "MAE": mean_absolute_error(y_pred=y_pred, y_true=y_test),
-                "MAPE": mean_absolute_percentage_error(y_pred=y_pred, y_true=y_test),
-                "MSE": mean_squared_error(y_pred=y_pred, y_true=y_test),
-            }
-
-    def set_model(self, algo_name):
-
+    def set_model(self, algo_name,X_train=None,y_train=None):
+        if X_train == None and y_train == None:
+            X_train = self.X
+            y_train = self.y
         try:
-            # Memeriksa apakah algoritma tersedia dalam daftar yang telah ditentukan
             if algo_name in self.ALGORITHM:
-                # Menginisialisasi model dengan algoritma yang dipilih
                 model_instance = self.ALGORITHM[algo_name]
-                model = model_instance().fit(self.X_train, self.y_train)
+                model = model_instance().fit(X_train, y_train)
                 self.model = (algo_name, model)
                 return self
             else:
@@ -150,21 +183,16 @@ class Parent(ABC):
             return self
 
     def hyperparameters(self, params):
-        # Memeriksa apakah model telah diatur sebelumnya
         if not hasattr(self, "model"):
             raise ValueError("Model algorithm not found")
 
-        # Mendapatkan nama algoritma dari model yang telah diatur
         algo_name = self.model[0]
 
-        # Memeriksa apakah algoritma tersedia dalam daftar yang telah ditentukan
         if algo_name not in self.ALGORITHM:
             raise ValueError("Algorithm '{}' not found in the list.".format(algo_name))
 
-        # Mendapatkan model dari daftar algoritma
         model_instance = self.model[1]
 
-        # Memeriksa parameter yang dibutuhkan oleh model
         params_required = list(model_instance.get_params().keys())
         for key in params:
             if key not in params_required:
@@ -172,53 +200,46 @@ class Parent(ABC):
                     "Parameter '{}' is not required for this model.".format(key)
                 )
 
-        # Menyetel hyperparameter model
         model = self.model[1]
         model = model.set_params(**params)
 
-        # Menyimpan model yang telah disetel
         self.model = algo_name, model
 
-        # Melakukan prediksi menggunakan model yang telah disetel
         pred = model.predict(self.X_test)
 
-        # Mengembalikan laporan klasifikasi berdasarkan prediksi
         return self.score(y_test=self.y_test, y_pred=pred)
 
     def predict(self, X_test: pd.DataFrame, output=None):
-        # Memeriksa apakah model telah diatur sebelumnya
         if not hasattr(self, "model"):
             raise NotImplementedError("Model Not Define")
         if X_test.shape[1] != self.X.shape[1]:
             raise ValueError(
                 "The number of features in the test data is not equal to the number of features in the training data."
-            )
+            ) 
 
-        X_test = Parent.encoding_predict(data=X_test, encoder=self.data_encoder)
-        X_test = X_test.values
+        # Encoding and norm
+        X = X_test.copy()
 
-        # Melakukan normalisasi data uji menggunakan scaler yang telah disimpan
-        if X_test is not self.X_test:
-            if self.norm:
-                X_test = self.scaler.transform(X_test)
+        if hasattr(self,'cols_encoded'):
+            X = Parent.encoding_predict(self.X_encoder,X,self.cols_encoded)
+
+        X = X.values
+        if hasattr(self,'scaler'):
+            X = self.scaler.transform(X)
 
         # Melakukan prediksi menggunakan model yang telah diatur
-        pred = self.model[1].predict(X_test)
-
+        pred = self.model[1].predict(X)
+        
+        if hasattr(self,'y_encoder'):
+            pred = self.y_encoder.inverse_transform(pred)
         # Jika output yang diminta adalah DataFrame
         if output == "dataframe":
-            # Mengembalikan hasil prediksi dalam bentuk DataFrame
-            X_test = self.scaler.inverse_transform(X_test)
-            result = np.concatenate((X_test, pred[:, np.newaxis]), axis=1)
-            column_names = [f"X{i}" for i in range(X_test.shape[1])]
-            column_names.append("pred")
-            return pd.DataFrame(result, columns=column_names)
+            X_test['pred'] = pred
+            return X_test
 
-        # Mengembalikan hasil prediksi
         return pred
 
     def save_model(self):
-        # Melakukan serialisasi objek model menggunakan modul pickle
         return pickle.dumps(self)
 
     def not_found(self, attr: str):
@@ -251,6 +272,14 @@ class Parent(ABC):
     def get_result_compare_models(self):
         self.not_found("result_compare_models")
         return self.result_compare_models
+
+    @property
+    def get_metrics(self):
+        return self.METRICS
+
+    @property 
+    def get_algorithm(self):
+        return self.ALGORITHM 
 
     @property
     def get_list_models(self):

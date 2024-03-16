@@ -42,33 +42,13 @@ class Regression(Parent):
     ALGORITHM = ALGORITHM_REG
     METRICS = dict(zip(METRICS_NAMES, METRICS_OBJECT))
     model_type = "Regression"
+    def score(self,y_true,y_pred):
+        pass
 
     def __str__(self) -> str:
         return "<Regression Object>"
 
     def find_best_model(self, metric="mean_absolute_percentage_error"):
-        """
-        Mencari model terbaik berdasarkan nilai metrik evaluasi yang diberikan.
-
-        Parameters:
-            metric (str, optional): Nama metrik evaluasi yang akan digunakan untuk menemukan model terbaik.
-                                    Jika "all", akan menggunakan total kesalahan untuk semua metrik evaluasi yang tersedia.
-                                    Defaultnya adalah "mean_absolute_percentage_error".
-
-        Returns:
-            tuple: Tuple yang berisi algoritma terbaik dan nilai metrik terbaik.
-
-        Raises:
-            ValueError: Jika nilai metrik evaluasi tidak valid.
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Menemukan model terbaik berdasarkan metrik evaluasi yang diberikan
-            best_algorithm, best_metric_value = model.find_best_model(metric="mean_squared_error")
-        """
-
         rest = self.result_compare_models
         for i in rest:
             if metric == "all":
@@ -82,33 +62,7 @@ class Regression(Parent):
         self.best_algorihtm = best_algo
         return best_algo, rest[best_algo]
 
-    def compare_model(self, output="dict"):
-        """
-        Membandingkan performa model menggunakan berbagai algoritma klasifikasi yang telah ditentukan sebelumnya.
-
-        Parameters:
-            output (str, optional): Format output yang diinginkan. Nilai yang diterima adalah "dict" atau nama metrik evaluasi.
-                                    Jika "dataframe" atau nama metrik evaluasi tidak diberikan, akan mengembalikan nilai metrik evaluasi yang diminta.
-                                    Defaultnya adalah "dict".
-
-        Returns:
-            dict or pandas.DataFrame or float: Hasil evaluasi model untuk setiap algoritma klasifikasi.
-                                               Jika output adalah "dict", akan mengembalikan kamus yang berisi hasil evaluasi untuk setiap algoritma.
-                                               Jika output adalah "dataframe", akan mengembalikan DataFrame Pandas yang berisi hasil evaluasi untuk setiap algoritma.
-                                               Jika output adalah nama metrik evaluasi, akan mengembalikan nilai metrik evaluasi tersebut untuk setiap algoritma.
-
-        Raises:
-            ValueError: Jika nilai output tidak valid atau jika nama metrik evaluasi tidak ditemukan.
-
-        Example:
-            # Inisialisasi objek model
-            model = MyModel()
-
-            # Membandingkan performa model menggunakan metode compare_model
-            result_dict = model.compare_model()
-            result_dataframe = model.compare_model(output="dataframe")
-            accuracy_dict = model.compare_model(output="accuracy")
-        """
+    def compare_model(self,X_train,X_test,y_train,y_test,output="dict"):
         X_train, X_test, y_train, y_test = (
             self.X_train,
             self.X_test,
