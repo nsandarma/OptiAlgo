@@ -17,8 +17,8 @@ class Parent(ABC):
     @abstractmethod
     def compare_model(self): ...
 
-    @abstractmethod
-    def find_best_model(self): ...
+    # @abstractmethod
+    # def find_best_model(self): ...
 
     @abstractmethod
     def score(self, y_true, y_pred): ...
@@ -26,19 +26,21 @@ class Parent(ABC):
     def check_imbalance(dataset:pd.DataFrame, target_column):
         # Hitung distribusi kelas target
         class_distribution = dataset[target_column].value_counts(normalize=True)
-        
+        class_minority = class_distribution[class_distribution==class_distribution.min()]
+
         # Periksa apakah salah satu kelas memiliki persentase di bawah ambang batas
-        imbalance_threshold = 0.09  # Anda dapat menyesuaikan ambang batas sesuai kebutuhan
-        imbalance_info = ""
-        for class_label, percentage in class_distribution.items():
-            if percentage < imbalance_threshold:
-                imbalance_info += f"The {class_label} class has an imbalance of {percentage*100:.2f}%.\n"
-        
-        if imbalance_info == "":
-            imbalance_info = "Dataset is balanced."
-        else:
-            imbalance_info += "Consider handling class imbalance."
-        return imbalance_info
+        imbalance_threshold = 0.02  # Anda dapat menyesuaikan ambang batas sesuai kebutuhan
+
+        status = False
+
+        if class_distribution.var() >= imbalance_threshold:
+            imbalance_info = f"""
+            The {class_minority.index.tolist()} class has an imbalance of {class_minority.values}
+            \nConsider handling class imbalance. 
+            """
+            print(imbalance_info)
+            status = True
+        return status
 
     def handling_missing_values(self,data:pd.DataFrame,imputation=None,inplace=False) -> pd.DataFrame:
         miss_value = data.isna().sum().to_dict()
@@ -72,13 +74,13 @@ class Parent(ABC):
             data[v] = X[:,i]
         data = data.drop(columns=[target])
         return data,target_encoder
+
     def encoding_predict(encoder,X_test,features_cat):
         X = encoder.transform(X_test[features_cat])
         for i,v in enumerate(features_cat):
             X_test[v] =  X[:,1]
         return X_test
         
-
     def decoding(data:pd.DataFrame,data_categories):
         for i in data_categories.columns:
             data[i] = data_categories[i]
@@ -92,7 +94,8 @@ class Parent(ABC):
         return i
 
     def split_data(self,train_size):
-        return train_test_split(self.X,self.y,random_state=self.seed,train_size=train_size,stratify=self.y)
+        stratify = self.y if self.model_type == 'Classification' else None
+        return train_test_split(self.X,self.y,random_state=self.seed,train_size=train_size,stratify=stratify)
 
     def find_best_params(self,algo_name,param_grid,X_train=None,y_train=None,n_splits=5):
         if algo_name not in self.ALGORITHM.keys():
@@ -100,15 +103,14 @@ class Parent(ABC):
         if X_train == None and y_train == None:
             X_train = self.X
             y_train = self.y
-        alg = self.ALGORITHM[algo_name]()
-        if algo_name == 'Logistic Regression':
-            alg = self.ALGORITHM[algo_name](max_iter=3000)
+        alg = self.ALGORITHM[algo_name]
         kfold = StratifiedKFold(n_splits=n_splits,shuffle=True,random_state=self.seed)
         clf = GridSearchCV(estimator=alg,param_grid=param_grid,cv=kfold,scoring='accuracy')
         clf.fit(X_train,y_train)
         return clf.best_params_,clf.best_score_
 
 
+    # Fit Method
     def fit(
         self,
         data: pd.DataFrame,
@@ -128,10 +130,8 @@ class Parent(ABC):
             raise ValueError(f"Missing Value in {miss_value}")
 
         # Check Imbalance
-        status_imbalance = False
-        if Parent.check_imbalance(data,target) == "Dataset is balanced.":
-           status_imbalance = True 
-        self.status_imbalance = status_imbalance
+        if self.model_type == 'Classification':
+            self.status_imbalance = Parent.check_imbalance(data,target) 
         
         # Encoding Columns
         if any(self.check_col_categories(data[features])):
@@ -162,18 +162,22 @@ class Parent(ABC):
         self.y = y
         self.norm = norm
 
-        self.params = None
         return self
 
 
     def set_model(self, algo_name,X_train=None,y_train=None):
-        if X_train == None and y_train == None:
+        if isinstance(X_train,np.ndarray) and isinstance(X_train,np.ndarray):
+            pass
+        else:
             X_train = self.X
             y_train = self.y
+
+        self.X_train = X_train
+        self.y_train = y_train
         try:
             if algo_name in self.ALGORITHM:
                 model_instance = self.ALGORITHM[algo_name]
-                model = model_instance().fit(X_train, y_train)
+                model = model_instance.fit(X_train, y_train)
                 self.model = (algo_name, model)
                 return self
             else:
@@ -181,6 +185,10 @@ class Parent(ABC):
         except Exception as e:
             print("Error:", e)
             return self
+    
+    def GridSearch(self,parameters) -> GridSearchCV():
+        self.not_found("model")
+        return GridSearchCV(self.model[1],parameters).fit(self.X,self.y)
 
     def hyperparameters(self, params):
         if not hasattr(self, "model"):
@@ -188,12 +196,10 @@ class Parent(ABC):
 
         algo_name = self.model[0]
 
-        if algo_name not in self.ALGORITHM:
-            raise ValueError("Algorithm '{}' not found in the list.".format(algo_name))
-
         model_instance = self.model[1]
 
         params_required = list(model_instance.get_params().keys())
+
         for key in params:
             if key not in params_required:
                 raise ValueError(
@@ -205,27 +211,35 @@ class Parent(ABC):
 
         self.model = algo_name, model
 
-        pred = model.predict(self.X_test)
-
-        return self.score(y_test=self.y_test, y_pred=pred)
+        return self
 
     def predict(self, X_test: pd.DataFrame, output=None):
         if not hasattr(self, "model"):
             raise NotImplementedError("Model Not Define")
-        if X_test.shape[1] != self.X.shape[1]:
+        if X_test.shape[1] != self.X_train.shape[1]:
             raise ValueError(
                 "The number of features in the test data is not equal to the number of features in the training data."
             ) 
 
-        # Encoding and norm
-        X = X_test.copy()
+        if type(X_test).__name__ not in ['ndarray','DataFrame']:
+            raise ValueError("X_test data type must be ndarray or dataframe")
 
-        if hasattr(self,'cols_encoded'):
-            X = Parent.encoding_predict(self.X_encoder,X,self.cols_encoded)
+        X = X_test
+        if isinstance(X_test,pd.DataFrame):
+            if hasattr(self,'cols_encoded'):
+                X = Parent.encoding_predict(self.X_encoder,X,self.cols_encoded)
+            X = X.values
+        else:
+            if X_test.dtype == 'object':
+                X = pd.DataFrame(data=X,columns=self.features)
+                X = Parent.encoding_predict(self.X_encoder,X,self.cols_encoded)
+                X = X.values
 
-        X = X.values
         if hasattr(self,'scaler'):
-            X = self.scaler.transform(X)
+            if (X.min() >= 0) and (X.max() <=1):
+                ...
+            else:
+                X = self.scaler.transform(X)
 
         # Melakukan prediksi menggunakan model yang telah diatur
         pred = self.model[1].predict(X)
@@ -262,6 +276,9 @@ class Parent(ABC):
     @property
     def get_X_test(self):
         return self.X_test
+
+    # def model(self):
+    #     return self.model
 
     @property
     def get_params_from_model(self):
