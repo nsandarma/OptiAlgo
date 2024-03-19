@@ -42,10 +42,10 @@ Kami sangat menyambut kontribusi dari komunitas untuk meningkatkan dan mengemban
 
 ## Lisensi
 
-...
+MIT
 
 ## Kontak
 
-...
+email : nsandarma@gmail.com
 
 Terima kasih telah menggunakan OptiAlgo!
