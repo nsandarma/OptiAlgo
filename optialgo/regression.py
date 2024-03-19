@@ -90,16 +90,18 @@ class Regression(Parent):
         c["fit_time"] = c["fit_time"].mean()
         c["score_time"] = c["score_time"].mean()
         c["test_score"] = c["test_score"].mean()
-        c["mape"] = c.pop("test_score")
-        c["mse"] = cross_val_score(
-            estimator, X, y, scoring="neg_mean_squared_error"
-        ).mean()
-        c["mae"] = cross_val_score(
-            estimator, X, y, scoring="neg_mean_absolute_error"
-        ).mean()
-        c["rmse"] = cross_val_score(
-            estimator, X, y, scoring="neg_root_mean_squared_error"
-        ).mean()
+        c["mean_absolute_percentage_error"] = abs(c.pop("test_score"))
+        c["mean_squared_error"] = abs(
+            cross_val_score(estimator, X, y, scoring="neg_mean_squared_error").mean()
+        )
+        c["mean_absolute_error"] = abs(
+            cross_val_score(estimator, X, y, scoring="neg_mean_absolute_error").mean()
+        )
+        c["root_mean_squared_error"] = abs(
+            cross_val_score(
+                estimator, X, y, scoring="neg_root_mean_squared_error"
+            ).mean()
+        )
         return c
 
     def score_report(self, y_true, y_pred):

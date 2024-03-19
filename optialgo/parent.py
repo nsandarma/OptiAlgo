@@ -341,12 +341,23 @@ class Parent(ABC):
             X_train = self.X
             y_train = self.y
 
-        kfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=self.seed)
+        if self.model_type == "Classification":
+            kfold = StratifiedKFold(
+                n_splits=n_splits, shuffle=True, random_state=self.seed
+            )
+            score = "accuracy"
+        else:
+            kfold = None
+            score = "neg_mean_absolute_percentage_error"
+
         clf = GridSearchCV(
-            estimator=alg, param_grid=param_grid, cv=kfold, scoring="accuracy"
+            estimator=alg, param_grid=param_grid, cv=kfold, scoring=score
         )
         clf.fit(X_train, y_train)
-        res = {"best_params": clf.best_params_, "score": clf.best_score_}
+        score = clf.best_score_
+        if self.model_type == "Regression":
+            score = abs(clf.best_score_)
+        res = {"best_params": clf.best_params_, "score": score}
         return res
 
     def tuning(self, params):
@@ -425,6 +436,7 @@ class Parent(ABC):
                 X = pd.DataFrame(data=X, columns=self.features)
                 X = Parent.encoding_predict(self.X_encoder, X, self.cols_encoded)
                 X = X.values
+            X_test = pd.DataFrame(data=X, columns=self.features)
 
         if hasattr(self, "scaler"):
             if (X.min() >= 0) and (X.max() <= 1):

@@ -6,12 +6,20 @@ OptiAlgo adalah sebuah proyek yang masih dalam tahap pengembangan. Proyek ini be
 2. Set Model
 3. Prediksi
 4. Tuning HyperParameter
+5. Preprocessing Data (Handling Missing Values,Sampling)
 
+## Instalasi
+
+**Sebelum install OptiAlgo, pastikan Anda telah membuat environment terlebih dahulu.**
+
+```bash
+pip install optialgo
+```
 
 ## Cara Menggunakan
 ```py
 import pandas as pd
-from src import Classification
+from optialgo import Classification
 
 df = pd.read_csv('dataset_ex/drug200.csv')
 features = ['Age','Sex','BP','Cholesterol',"Na_to_K"]

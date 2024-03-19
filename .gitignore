@@ -2,8 +2,11 @@
 .ipynb_checkpoints/
 **ipynb_checkpoints**
 **__pycache__**
+build/
+optialgo.egg-info/
+dist/
 testing**
 
 /env
 
-setup.py
+
