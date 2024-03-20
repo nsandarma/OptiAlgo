@@ -30,7 +30,7 @@ clf.fit(data=df,target=target,features=features)
 result = clf.compare_model(output='dataframe')
 print(result)
 ```
-untuk lebih lengkap nya anda bisa temukan pada notebook [example](/example.ipynb)
+untuk lebih lengkap nya anda bisa temukan pada notebook [example](https://github.com/nsandarma/OptiAlgo/blob/master/example.ipynb)
 
 
 ## Cara Berkontribusi

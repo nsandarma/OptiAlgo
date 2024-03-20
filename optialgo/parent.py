@@ -1,19 +1,17 @@
-from collections import defaultdict
 from sklearn.model_selection import (
     GridSearchCV,
     KFold,
     train_test_split,
     StratifiedKFold,
 )
+from sklearn.decomposition import PCA
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder, TargetEncoder
 import pandas as pd
 import pickle
 from abc import ABC, abstractmethod
 
-
 import warnings
-
 warnings.filterwarnings("always")
 
 
@@ -28,6 +26,11 @@ class Parent(ABC):
     def score(self, y_true, y_pred): ...
 
     # ---> Preprocessing Data
+
+    def pca(self,n_components,X):
+        pc = PCA(n_components=n_components)
+        pc.fit(X)
+        return pc.transform(X)
 
     def check_imbalance(dataset: pd.DataFrame, target_column):
         # Hitung distribusi kelas target
@@ -500,6 +503,16 @@ class Parent(ABC):
         print(rest)
 
     def save_model(self):
+        """
+        Serialize and save the model object using pickle.
+
+        Returns:
+            bytes: Serialized representation of the model object.
+
+        Raises:
+            PickleError: If serialization fails.
+        """
+
         return pickle.dumps(self)
 
     # Modelling <----
