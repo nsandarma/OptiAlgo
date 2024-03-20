@@ -1,6 +1,5 @@
 from sklearn.model_selection import (
     GridSearchCV,
-    KFold,
     train_test_split,
     StratifiedKFold,
 )
@@ -12,6 +11,7 @@ import pickle
 from abc import ABC, abstractmethod
 
 import warnings
+
 warnings.filterwarnings("always")
 
 
@@ -27,19 +27,17 @@ class Parent(ABC):
 
     # ---> Preprocessing Data
 
-    def pca(self,n_components,X):
+    def pca(self, n_components, X):
         pc = PCA(n_components=n_components)
         pc.fit(X)
         return pc.transform(X)
 
     def check_imbalance(dataset: pd.DataFrame, target_column):
-        # Hitung distribusi kelas target
         class_distribution = dataset[target_column].value_counts(normalize=True)
         class_minority = class_distribution[
             class_distribution == class_distribution.min()
         ]
 
-        # Periksa apakah salah satu kelas memiliki persentase di bawah ambang batas
         imbalance_threshold = 0.02
 
         status = False
@@ -132,7 +130,7 @@ class Parent(ABC):
                 i.append(j)
         return i
 
-    def split_data(self, train_size):
+    def split_data(self, train_size) -> np.ndarray:
         """
         Splits the data into training and testing sets.
 
@@ -310,7 +308,7 @@ class Parent(ABC):
 
     def find_best_params(
         self, param_grid, algo_name=None, X_train=None, y_train=None, n_splits=5
-    ):
+    ) -> dict:
         """
         Finds the best hyperparameters for the specified algorithm using grid search.
 
@@ -456,7 +454,7 @@ class Parent(ABC):
             return X_test
         return pred
 
-    def predict_cli(self):
+    def predict_cli(self, output="dict") -> None:
         """
         Predicts target values based on user input through the command-line interface (CLI).
 
@@ -499,8 +497,14 @@ class Parent(ABC):
         if hasattr(self, "y_encoder"):
             pred = self.y_encoder.inverse_transform(pred)
         rest["Predictions"] = pred
+        print()
         print("-------> RESULT <---------")
-        print(rest)
+        if output == "dataframe":
+            print(rest)
+        elif output == "only_pred":
+            print(rest["Predictions"].values[0])
+        else:
+            print(rest.to_dict(orient="records")[0])
 
     def save_model(self):
         """
@@ -559,8 +563,3 @@ class Parent(ABC):
     @property
     def get_list_models(self):
         return list(self.ALGORITHM.keys())
-
-    @property
-    def get_algorithm_from_find_best_model(self):
-        self.not_found("best_algorithm")
-        return self.best_algorithm

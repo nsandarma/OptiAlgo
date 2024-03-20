@@ -14,7 +14,6 @@ from sklearn.metrics import (
     f1_score,
     recall_score,
     roc_auc_score,
-    log_loss,
     classification_report,
 )
 from sklearn.preprocessing import MinMaxScaler
