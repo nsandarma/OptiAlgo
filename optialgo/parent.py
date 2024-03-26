@@ -32,13 +32,13 @@ class Parent(ABC):
         pc.fit(X)
         return pc.transform(X)
 
-    def check_imbalance(dataset: pd.DataFrame, target_column):
+    def check_imbalance(dataset: pd.DataFrame, target_column,thresold=0.02):
         class_distribution = dataset[target_column].value_counts(normalize=True)
         class_minority = class_distribution[
             class_distribution == class_distribution.min()
         ]
 
-        imbalance_threshold = 0.02
+        imbalance_threshold = thresold
 
         status = False
 
@@ -506,18 +506,24 @@ class Parent(ABC):
         else:
             print(rest.to_dict(orient="records")[0])
 
-    def save_model(self):
+    def save(self):
         """
         Serialize and save the model object using pickle.
 
         Returns:
-            bytes: Serialized representation of the model object.
+            bytes: Serialized representation of the optialgo object.
 
         Raises:
             PickleError: If serialization fails.
         """
 
         return pickle.dumps(self)
+
+    def save_model(self):
+        """
+
+        """
+        return pickle.dumps(self.model[1])
 
     # Modelling <----
 

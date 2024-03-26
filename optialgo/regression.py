@@ -207,7 +207,7 @@ class Regression(Parent):
         self.result_compare_models = result
         if output == "dataframe":
             return pd.DataFrame.from_dict(result, orient="index")
-        elif output == "only_mape":
+        elif output == "only_score":
             rest = {}
             for i in result:
                 rest[i] = round(result[i]["mean_absolute_percentage_error"], 2)

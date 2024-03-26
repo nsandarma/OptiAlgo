@@ -1,5 +1,5 @@
 # OptiAlgo
-OptiAlgo adalah sebuah proyek yang masih dalam tahap pengembangan. Proyek ini bertujuan untuk menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual. Dengan OptiAlgo, pengguna dapat dengan mudah mencari algoritma yang paling sesuai dengan kebutuhan mereka, memberikan fleksibilitas yang diperlukan untuk menangani berbagai jenis masalah data dengan efisien.
+OptiAlgo menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual. Dengan OptiAlgo, pengguna dapat dengan mudah mencari algoritma yang paling sesuai dengan kebutuhan mereka, memberikan fleksibilitas yang diperlukan untuk menangani berbagai jenis masalah data dengan efisien.
 
 ## Fitur Utama
 1. Mencari Algoritma Terbaik

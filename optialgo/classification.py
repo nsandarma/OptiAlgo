@@ -284,7 +284,7 @@ class Classification(Parent):
         self.result_compare_models = result
         if output == "dataframe":
             return pd.DataFrame.from_dict(result, orient="index")
-        elif output == "only_accuracy":
+        elif output == "only_score":
             rest = {}
             for i in result:
                 rest[i] = round(result[i]["accuracy"], 2)
