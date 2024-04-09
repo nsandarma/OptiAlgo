@@ -6,6 +6,8 @@ build/
 optialgo.egg-info/
 dist/
 testing**
+mknn.py
+.gitignore
 
 /env
 

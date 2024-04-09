@@ -161,6 +161,28 @@ class Parent(ABC):
 
     # Preprocessing Data <----
 
+    # add custom model
+    def add_model(self,model):
+        """
+        Add a model to the collection of algorithms.
+
+        Parameters:
+        -----------
+        model : object
+            A machine learning model object with 'fit', 'get_params', and '__str__' methods.
+
+        Raises:
+        -------
+        ValueError
+            If the provided object does not have required methods ('fit', 'get_params', '__str__').
+
+        """
+        if not hasattr(model,'fit') or not hasattr(model,'get_params') or not hasattr(model,'__str__'):
+            raise ValueError("fit method not in object")
+        algorithms = self.ALGORITHM
+        algorithms[str(model)] = model 
+        self.ALGORITHM = algorithms
+
     def fit(self, data: pd.DataFrame, target: str, features: list, norm=True, seed=42):
         """
         Fits the model to the provided data.
