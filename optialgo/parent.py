@@ -177,7 +177,7 @@ class Parent(ABC):
             If the provided object does not have required methods ('fit', 'get_params', '__str__').
 
         """
-        if not hasattr(model,'fit') or not hasattr(model,'get_params') or not hasattr(model,'__str__'):
+        if not hasattr(model,'get_params') or not hasattr(model,'__str__'):
             raise ValueError("fit method not in object")
         algorithms = self.ALGORITHM
         algorithms[str(model)] = model 
