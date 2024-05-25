@@ -9,6 +9,7 @@ testing**
 mknn.py
 .gitignore
 
+test**
 /env
 
 

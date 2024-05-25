@@ -1,10 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import (
-    train_test_split,
     StratifiedKFold,
-    GridSearchCV,
-    KFold,
     cross_val_score,
     cross_validate,
 )
@@ -16,7 +13,6 @@ from sklearn.metrics import (
     roc_auc_score,
     classification_report,
 )
-from sklearn.preprocessing import MinMaxScaler
 
 # Import Algorithm Module from sklearn
 from sklearn.naive_bayes import MultinomialNB
@@ -26,59 +22,70 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
-from collections import defaultdict
-from .parent import Parent
 
-# Sampling
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.over_sampling import SMOTE, RandomOverSampler
+# optialgo
+from .parent import Parent
+from .dataset import Dataset
 
 import warnings
 
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
+from rich import box
+from rich.progress import Progress
+
+
 warnings.filterwarnings("always")
-
-ALGORITHM_NAMES = [
-    "Naive Bayes",
-    "K-Nearest Neighbor",
-    "SVM",
-    "Logistic Regression",
-    "Random Forest",
-    "Decision Tree Classifier",
-    "XGBoost",
-    "Gradient Boosting",
-]
-
-ALGORITHM_OBJECT = [
-    MultinomialNB(),
-    KNeighborsClassifier(),
-    SVC(),
-    LogisticRegression(max_iter=3000),
-    RandomForestClassifier(),
-    DecisionTreeClassifier(),
-    XGBClassifier(),
-    GradientBoostingClassifier(),
-]
-ALGORITHM_CLF = dict(zip(ALGORITHM_NAMES, ALGORITHM_OBJECT))
-METRICS_NAMES = ["accuracy", "precision", "recall", "f1"]
-METRICS_OBJECT = [accuracy_score, precision_score, recall_score, f1_score]
 
 
 class Classification(Parent):
-    ALGORITHM = ALGORITHM_CLF
-    METRICS = dict(zip(METRICS_NAMES, METRICS_OBJECT))
+    ALGORITHM = {
+        "Naive Bayes": MultinomialNB(),
+        "K-Nearest Neighbor": KNeighborsClassifier(),
+        "SVM": SVC(),
+        "Logistic Regression": LogisticRegression(max_iter=3000),
+        "Random Forest": RandomForestClassifier(),
+        "Decision Tree": DecisionTreeClassifier(),
+        "XGBoost": XGBClassifier(),
+        "Gradient Boosting": GradientBoostingClassifier(),
+    }
+    METRICS = {
+        "accuracy": accuracy_score,
+        "precision": precision_score,
+        "recall": recall_score,
+        "f1": f1_score,
+    }
     model_type = "Classification"
 
-    def fit(self, data: pd.DataFrame, target: str, features: list, norm=True):
-        len_class = len(data[target].unique())
-        self.class_type = "binary" if len_class == 2 else "multiclass"
-        if self.class_type == "binary":
+    def __init__(self, dataset: Dataset, algorithm: str = None):
+        """
+        Initializes the class with the provided dataset and algorithm.
+
+        If the dataset represents a binary classification problem,
+        it adds the AUC metric to the classification metrics.
+
+        Parameters
+        ----------
+        dataset : Dataset
+            An instance of the Dataset class, which includes the data and its characteristics.
+
+        algorithm : str, optional
+            The algorithm to be used for classification. Default is None.
+
+        Example
+        -------
+        >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        >>> classifier = Classifier(dataset, algorithm='random_forest')
+        """
+        if dataset.class_type == "binary":
             Classification.METRICS["AUC"] = roc_auc_score
-        return super().fit(data, target, features, norm)
+        return super().__init__(dataset, algorithm)
 
     def __str__(self) -> str:
         return "<Classificaton Object>"
 
-    def cross_val(metrics, X, y, estimator, cv, class_type):
+    def __cross_val(metrics, X, y, estimator, cv, class_type):
         c = cross_validate(estimator, X, y, scoring="accuracy", cv=cv)
         c["fit_time"] = c["fit_time"].mean()
         c["score_time"] = c["score_time"].mean()
@@ -123,55 +130,15 @@ class Classification(Parent):
             For multiclass classification, it uses weighted averaging for precision, recall, and F1 score.
             For other problem types, it returns the specified metric score directly.
         """
-        average = "weighted" if self.class_type == "multiclass" else None
+        average = "weighted" if self.dataset.class_type == "multiclass" else None
         if metric == "accuracy":
             return self.METRICS[metric](y_true, y_pred)
-        if self.class_type == "multiclass":
+        if self.dataset.class_type == "multiclass":
             return self.METRICS[metric](
                 y_true, y_pred, average=average, zero_division=0.0
             )
         else:
             return self.METRICS[metric](y_true, y_pred)
-
-    def sampling(self, method, X, y, sampling_strategy="auto"):
-        """
-        Performs sampling on the dataset using the specified method.
-
-        Parameters:
-            method (str): The sampling method to use. Supported options: 'under', 'over', 'SMOTE'.
-            X (array-like): The feature matrix.
-            y (array-like): The target vector.
-            sampling_strategy (str or float or dict, optional): The sampling strategy to apply. Default is 'auto'.
-                                                                Refer to the documentation of imbalanced-learn
-                                                                library for available options.
-
-        Returns:
-            tuple: A tuple containing the resampled feature matrix (X_resampled) and the resampled target vector (y_resampled).
-
-        Raises:
-            ValueError: If the specified method is not found.
-
-        Note:
-            This method performs sampling on the dataset to address class imbalance.
-            Supported sampling methods include random undersampling ('under'), random oversampling ('over'),
-            and Synthetic Minority Over-sampling Technique (SMOTE).
-        """
-        random_state = self.seed
-        if method == "under":
-            sampler = RandomUnderSampler(
-                sampling_strategy=sampling_strategy, random_state=random_state
-            )
-        elif method == "over":
-            sampler = RandomOverSampler(
-                sampling_strategy=sampling_strategy, random_state=random_state
-            )
-        elif method == "SMOTE":
-            sampler = SMOTE(
-                sampling_strategy=sampling_strategy, random_state=random_state
-            )
-        else:
-            raise ValueError("method not found !")
-        return sampler.fit_resample(X, y)
 
     def score_report(self, y_true, y_pred):
         """
@@ -200,48 +167,72 @@ class Classification(Parent):
 
     def compare_model(
         self,
-        X_train=None,
-        X_test=None,
-        y_train=None,
-        y_test=None,
         output="dict",
-        train_val=False,
+        train_val=True,
     ):
         """
-        Compares the performance of different models using either train-test split or cross-validation.
+        Compares multiple classification models based on various metrics and returns the results.
 
-        Parameters:
-            X_train (array-like, optional): The feature matrix for training. Default is None.
-            X_test (array-like, optional): The feature matrix for testing. Default is None.
-            y_train (array-like, optional): The target vector for training. Default is None.
-            y_test (array-like, optional): The target vector for testing. Default is None.
-            output (str, optional): Specifies the format of the output. Default is 'dict'.
-                                    Options: 'dict' (dictionary), 'dataframe' (DataFrame), 'only_accuracy'.
-            train_val (bool, optional): Whether to compute performance metrics on both training and validation sets.
-                                        Applicable only if X_train, X_test, y_train, and y_test are provided.
-                                        Default is False.
+        This function runs a set of algorithms on the training data, evaluates them on the training and
+        validation sets or using cross-validation, and compiles the performance metrics. The results
+        can be output in different formats, including dictionary, pandas DataFrame, or a formatted table.
 
-        Returns:
-            dict or DataFrame: A dictionary or DataFrame containing the performance metrics of the models.
+        Parameters
+        ----------
+        output : str, optional
+            The format of the output. It can be:
+            - "dict": Returns the results as a dictionary (default).
+            - "dataframe": Returns the results as a pandas DataFrame.
+            - "table": Prints the results as a formatted table.
+            - "only_score": Returns only the accuracy scores in a simplified dictionary.
 
-        Note:
-            This method compares the performance of different models using either train-test split or cross-validation.
-            If train_val is True and X_train, X_test, y_train, and y_test are provided, it computes performance metrics
-            on both training and validation sets. Otherwise, it computes performance metrics using cross-validation.
+        train_val : bool, optional
+            If True, the function evaluates the models using a train-validation split.
+            If False, the function uses cross-validation. Default is True.
+
+        Returns
+        -------
+        dict or pd.DataFrame or None
+            The function returns results based on the `output` parameter:
+            - If `output` is "dict", it returns a dictionary of the results.
+            - If `output` is "dataframe", it returns a pandas DataFrame of the results.
+            - If `output` is "table", it prints the results as a formatted table.
+            - If `output` is "only_score", it returns a dictionary with only the accuracy scores.
+
+        Raises
+        ------
+        ValueError
+            If the task type is not "classification" or "regression".
+
+        Example
+        -------
+        >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        >>> classifier = Classifier(dataset, algorithm='random_forest')
+        >>> results = classifier.compare_model(output='dataframe', train_val=True)
+        >>> print(results)
         """
         result = {}
-        self.cross_validation = True
-        if np.any(X_train) and np.any(X_test) and np.any(y_train) and np.any(y_test):
-            self.cross_validation = False
+        X_train, X_test, y_train, y_test = self.dataset.get_x_y()
+
+        console = Console()
+
+        with Progress() as progress:
             if train_val:
+                clf_report = {}
+                title = "Train-Validation"
+                task = progress.add_task(
+                    "[cyan]Running algorithms...", total=len(self.ALGORITHM)
+                )
                 for al in self.ALGORITHM:
                     report = {}
                     alg = self.ALGORITHM[al].fit(X_train, y_train)
-                    print(f"{al} is run ...")
+                    if al in self.model:
+                        alg = self.model[1]
+                    progress.console.print(f"{al} is run ...")
                     pred_train = alg.predict(X_train)
                     pred_val = alg.predict(X_test)
                     report["accuracy_train"] = self.score(y_train, pred_train)
-                    report["acc_val"] = self.score(y_test, pred_val)
+                    report["accuracy_val"] = self.score(y_test, pred_val)
                     report["precision_train"] = self.score(
                         y_train, pred_train, metric="precision"
                     )
@@ -254,40 +245,66 @@ class Classification(Parent):
                     report["recall_val"] = self.score(y_test, pred_val, metric="recall")
                     report["f1_train"] = self.score(y_train, pred_train, metric="f1")
                     report["f1_val"] = self.score(y_test, pred_val, metric="f1")
-                    if self.class_type == "binary":
+                    if self.dataset.class_type == "binary":
                         report["auc_train"] = self.score(
                             y_train, pred_train, metric="AUC"
                         )
                         report["auc_val"] = self.score(y_test, pred_val)
+
                     result[al] = report
+
+                    clf_report[al] = classification_report(
+                        y_test, pred_val, labels=np.unique(pred_val)
+                    )
+                    progress.advance(task)
+                self.result_compare_models = clf_report
             else:
-                for al in self.ALGORITHM:
-                    alg = self.ALGORITHM[al].fit(X_train, y_train)
-                    print(f"{al} is run ...")
-                    y_pred = alg.predict(X_test)
-                    report = self.score_report(y_test, y_pred)
-                    result[al] = report
-        else:
-            kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=self.seed)
-            for al in self.ALGORITHM:
-                alg = self.ALGORITHM[al]
-                print(f"{al} is run ...")
-                report = Classification.cross_val(
-                    metrics=self.METRICS,
-                    estimator=alg,
-                    X=self.X,
-                    y=self.y,
-                    cv=kfold,
-                    class_type=self.class_type,
+                title = "Cross-Validation"
+                progress.console.print("Using cross-validation ...")
+                dataset = self.dataset
+                X = dataset.train[dataset.features].values
+                y = dataset.train[dataset.target].values
+                kfold = StratifiedKFold(
+                    n_splits=5, shuffle=True, random_state=dataset.seed
                 )
-                result[al] = report
-        self.result_compare_models = result
+                task = progress.add_task(
+                    "[cyan]Running algorithms...", total=len(self.ALGORITHM)
+                )
+                for al in self.ALGORITHM:
+                    alg = self.ALGORITHM[al]
+                    if al in self.model:
+                        alg = self.model[1]
+                    progress.console.print(f"{al} is run ...")
+                    report = Classification.__cross_val(
+                        metrics=self.METRICS,
+                        estimator=alg,
+                        X=X,
+                        y=y,
+                        cv=kfold,
+                        class_type=dataset.class_type,
+                    )
+                    result[al] = report
+                    progress.advance(task)
+
+                self.result_compare_models = result
         if output == "dataframe":
             return pd.DataFrame.from_dict(result, orient="index")
+        elif output == "table":
+            console.print()
+            cols = [""] + list(result["Naive Bayes"].keys())
+            table = Table(*cols, title=title, box=box.HORIZONTALS)
+            for i, v in result.items():
+                v = [f"{x:.4f}" for x in v.values()]
+                res = [i] + v
+                if i in self.model:
+                    res = [Text(c, style="bold magenta") for c in res]
+                table.add_row(*res)
+            console.print(table)
         elif output == "only_score":
-            rest = {}
-            for i in result:
-                rest[i] = round(result[i]["accuracy"], 2)
+            if title == "Cross-Validation":
+                rest = {i: round(result[i]["accuracy"], 2) for i in result}
+            else:
+                rest = {i: round(result[i]["accuracy_val"], 2) for i in result}
             return rest
         else:
             return result
