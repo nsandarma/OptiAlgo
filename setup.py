@@ -9,7 +9,7 @@ with open("requirements.txt", "r") as req_file:
 DESCRIPTION = "OptiAlgo menyediakan solusi cepat dan andal untuk mencari algoritma terbaik bagi pengguna, serta memberikan fleksibilitas dalam menangani berbagai masalah data."
 
 NAME = "optialgo"
-VERSION = "0.0.3"
+VERSION = "1.0.0"
 setup(
     name=NAME,
     version=VERSION,
@@ -20,7 +20,9 @@ setup(
     author="nsandarma",
     author_email="nsandarma@gmail.com",
     license="MIT",
-    packages=find_packages(exclude=["testing", "dataset_ex"]),
+    packages=find_packages(
+        exclude=["testing", "dataset_ex", "env", "images", "examples"]
+    ),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -29,4 +31,3 @@ setup(
     python_requires=">=3.10",
     install_requires=requirements,
 )
-# print(find_packages())

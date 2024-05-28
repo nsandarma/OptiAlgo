@@ -1,5 +1,5 @@
-from .parent import *
+from .__parent import Parent
 from .classification import Classification
 from .regression import Regression
 from .dataset import Dataset
-from .utils import *
+from .__utils import *
