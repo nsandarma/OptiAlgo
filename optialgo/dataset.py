@@ -171,16 +171,6 @@ class Dataset:
             raise ValueError("label_encoder not found !")
         return self.label_encoder.inverse_transform(y_pred)
 
-    def feature_selection_filter(
-        self, method: str, n_features_to_select, inplace=False
-    ):
-        pass
-
-    def remove_prefix(self):
-
-        cols = self.train.columns
-        cols.str.removeprefix("")
-
     def get_x_y(self):
         """
         Splits the preprocessed training and testing data into features and target arrays.
@@ -333,6 +323,7 @@ class Dataset:
         self.__train = train_
 
         self.__test = test_
+        return self
 
     def __encoding(col: list, encoder: str):
         ENCODER_NAMES = list(Dataset.ENCODERS.keys())
@@ -347,12 +338,6 @@ class Dataset:
     def __preprocessing(
         dataframe: pd.DataFrame, features, target, norm, encoder: dict = None
     ):
-        """
-        Usage:
-        -----
-        >>> encoder = {"one_hot":[<col_a>,<col_b>,...],"ordinal":[....],"target_mean": [.....]}
-
-        """
 
         dataframe = dataframe.copy()
 

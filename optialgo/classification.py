@@ -14,7 +14,6 @@ from sklearn.metrics import (
     classification_report,
 )
 
-# Import Algorithm Module from sklearn
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
@@ -24,7 +23,7 @@ from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 
 # optialgo
-from .parent import Parent
+from . import Parent
 from .dataset import Dataset
 
 import warnings
@@ -167,8 +166,10 @@ class Classification(Parent):
 
     def compare_model(
         self,
-        output="dict",
-        train_val=True,
+        output: str = "dict",
+        train_val: bool = True,
+        n_splits: int = 5,
+        verbose: bool = True,
     ):
         """
         Compares multiple classification models based on various metrics and returns the results.
@@ -217,18 +218,19 @@ class Classification(Parent):
         console = Console()
 
         with Progress() as progress:
-            if train_val:
-                clf_report = {}
-                title = "Train-Validation"
+            if verbose:
                 task = progress.add_task(
                     "[cyan]Running algorithms...", total=len(self.ALGORITHM)
                 )
-                for al in self.ALGORITHM:
-                    report = {}
-                    alg = self.ALGORITHM[al].fit(X_train, y_train)
-                    if al in self.model:
-                        alg = self.model[1]
-                    progress.console.print(f"{al} is run ...")
+            clf_report = {}
+            for al in self.ALGORITHM:
+                report = {}
+                alg = self.model[1] if al in self.model else self.ALGORITHM[al]
+                if verbose:
+                    progress.advance(task)
+                if train_val:
+                    title = "Train-Validation"
+                    alg = alg.fit(X_train, y_train)
                     pred_train = alg.predict(X_train)
                     pred_val = alg.predict(X_test)
                     report["accuracy_train"] = self.score(y_train, pred_train)
@@ -252,45 +254,32 @@ class Classification(Parent):
                         report["auc_val"] = self.score(y_test, pred_val)
 
                     result[al] = report
-
                     clf_report[al] = classification_report(
                         y_test, pred_val, labels=np.unique(pred_val)
                     )
-                    progress.advance(task)
-                self.result_compare_models = clf_report
-            else:
-                title = "Cross-Validation"
-                progress.console.print("Using cross-validation ...")
-                dataset = self.dataset
-                X = dataset.train[dataset.features].values
-                y = dataset.train[dataset.target].values
-                kfold = StratifiedKFold(
-                    n_splits=5, shuffle=True, random_state=dataset.seed
-                )
-                task = progress.add_task(
-                    "[cyan]Running algorithms...", total=len(self.ALGORITHM)
-                )
-                for al in self.ALGORITHM:
-                    alg = self.ALGORITHM[al]
-                    if al in self.model:
-                        alg = self.model[1]
-                    progress.console.print(f"{al} is run ...")
+                else:
+                    title = f"Cross-Validation (n_splits: {n_splits})"
+                    # progress.console.print("Using cross-validation ...")
+                    kfold = StratifiedKFold(
+                        n_splits=n_splits, shuffle=True, random_state=self.dataset.seed
+                    )
                     report = Classification.__cross_val(
                         metrics=self.METRICS,
                         estimator=alg,
-                        X=X,
-                        y=y,
+                        X=X_train,
+                        y=y_train,
                         cv=kfold,
-                        class_type=dataset.class_type,
+                        class_type=self.dataset.class_type,
                     )
                     result[al] = report
-                    progress.advance(task)
 
-                self.result_compare_models = result
+        if clf_report:
+            self.result_compare_models = clf_report
+        else:
+            self.result_compare_models = result
         if output == "dataframe":
             return pd.DataFrame.from_dict(result, orient="index")
         elif output == "table":
-            console.print()
             cols = [""] + list(result["Naive Bayes"].keys())
             table = Table(*cols, title=title, box=box.HORIZONTALS)
             for i, v in result.items():
@@ -301,10 +290,10 @@ class Classification(Parent):
                 table.add_row(*res)
             console.print(table)
         elif output == "only_score":
-            if title == "Cross-Validation":
-                rest = {i: round(result[i]["accuracy"], 2) for i in result}
-            else:
+            if title == "Train-Validation":
                 rest = {i: round(result[i]["accuracy_val"], 2) for i in result}
+            else:
+                rest = {i: round(result[i]["accuracy"], 2) for i in result}
             return rest
         else:
             return result

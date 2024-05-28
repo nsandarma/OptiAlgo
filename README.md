@@ -1,18 +1,19 @@
 # OptiAlgo
 OptiAlgo menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual.
 
-![image](images/demo.gif)
+![image](https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/demo.gif)
 
-## Fitur Utama
-1. Mencari Algoritma Terbaik
-2. Set Model
-3. Prediksi
-4. Tuning HyperParameter
-5. Preprocessing Data (Handling Missing Values,Sampling)
+## Fitur
+1. Data Prepration
+2. Data Preprocessing
+3. Comparing Model
+4. Set Model
+5. Prediction
+6. HyperParameter Tuning
 
 ## Instalasi
 
-**Sebelum install OptiAlgo, pastikan Anda telah membuat environment terlebih dahulu.**
+**Sebelum install OptiAlgo, disarankan membuat environment terlebih dahulu.**
 
 ```bash
 pip install optialgo
@@ -21,18 +22,23 @@ pip install optialgo
 ## Cara Menggunakan
 ```py
 import pandas as pd
-from optialgo import Classification
+from optialgo import Dataset, Classification
 
 df = pd.read_csv('dataset_ex/drug200.csv')
 features = ['Age','Sex','BP','Cholesterol',"Na_to_K"]
 target = 'Drug'
 
+dataset = Dataset(dataframe=df)
+dataset.fit(features=features,target=target)
+
 clf = Classification()
-clf.fit(data=df,target=target,features=features)
-result = clf.compare_model(output='dataframe')
+result = clf.compare_model(output='table',train_val=True)
 print(result)
 ```
-untuk lebih lengkap nya anda bisa temukan pada notebook [example](https://github.com/nsandarma/OptiAlgo/blob/master/example.ipynb)
+
+![image](images/result.png)
+
+untuk lebih lengkap nya anda bisa temukan pada notebook [example](https://github.com/nsandarma/OptiAlgo/blob/master/examples/classification.ipynb)
 
 
 ## Cara Berkontribusi

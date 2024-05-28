@@ -31,10 +31,6 @@ class Parent(ABC):
     @abstractmethod
     def score(self, y_true, y_pred): ...
 
-    # ---> Preprocessing Data
-
-    # Preprocessing Data <----
-
     def __init__(self, dataset: Dataset, algorithm: str = None):
 
         if not isinstance(dataset, Dataset):
@@ -48,8 +44,46 @@ class Parent(ABC):
 
     # ----> Tuning
     def find_best_params(self, param_grid: dict, inplace=False):
+        """
+        Perform hyperparameter tuning to find the best parameters for the model.
+
+        This method uses grid search cross-validation to find the best parameters for the model
+        stored in the `self.model` attribute. It takes a dictionary of parameter values to search
+        over and returns the best score and parameters found. Optionally, it can set the best
+        parameters to the model in place.
+
+        Parameters
+        ----------
+        param_grid : dict
+            A dictionary where the keys are parameter names and the values are lists of parameter
+            settings to try. This dictionary is used for performing grid search.
+
+        inplace : bool, optional
+            If True, the best parameters found by grid search will be set to the model in place.
+            Default is False.
+
+        Returns
+        -------
+        tuple or None
+            If `inplace` is False, returns a tuple containing the best score and the best parameters
+            found by grid search.
+            If `inplace` is True, the method sets the best parameters to the model and returns None.
+
+        Raises
+        ------
+        ValueError
+            If the `self.model` attribute is not found.
+
+        Example
+        -------
+        >>> regressor = Regressor(dataset, algorithm='linear_regression')
+        >>> param_grid = {'alpha': [0.1, 0.01, 0.001], 'max_iter': [100, 1000, 10000]}
+        >>> best_score, best_params = regressor.find_best_params(param_grid)
+        >>> print("Best Score:", best_score)
+        >>> print("Best Parameters:", best_params)
+        """
         if not self.model:
-            raise ValueError("attr model not found !")
+            raise ValueError("model not found !")
         X_train, _, y_train, _ = self.dataset.get_x_y()
 
         res = GridSearchCV(estimator=self.model[1], param_grid=param_grid).fit(
@@ -62,6 +96,32 @@ class Parent(ABC):
         return res.best_score_, res.best_params_
 
     def set_params(self, params: dict) -> None:
+        """
+        Set parameters for the model.
+
+        This method updates the parameters of the model stored in the `self.model` attribute.
+        It uses the provided dictionary of parameters to set new values for the model's parameters.
+
+        Parameters
+        ----------
+        params : dict
+            A dictionary containing the parameter names and values to be set for the model.
+            The keys should be the names of the parameters, and the values should be the desired
+            values for those parameters.
+
+        Returns
+        -------
+        None
+            This method does not return anything. It updates the model's parameters in place.
+
+        Example
+        -------
+        >>> regressor = Regressor(dataset, algorithm='linear_regression')
+        >>> new_params = {'alpha': 0.1, 'max_iter': 1000}
+        >>> regressor.set_params(new_params)
+        >>> print(regressor.model[1].get_params())
+        {'alpha': 0.1, 'copy_X': True, 'fit_intercept': True, 'max_iter': 1000, 'normalize': 'deprecated', ...}
+        """
         self.model[1].set_params(**params)
         self.__model = (self.model[0], self.model[1])
         return
@@ -69,8 +129,7 @@ class Parent(ABC):
     # <---- Tuning
 
     # ----> Modelling
-
-    def set_model(self, algorithm: str = None):
+    def set_model(self, algorithm: str):
         if algorithm:
             if algorithm not in self.get_list_models:
                 raise ValueError(f"{algorithm} not found in {self.get_list_models}")
@@ -155,10 +214,6 @@ class Parent(ABC):
     @property
     def get_metrics(self):
         return self.METRICS
-
-    @property
-    def get_algorithm(self):
-        return self.ALGORITHM
 
     @property
     def get_list_models(self):

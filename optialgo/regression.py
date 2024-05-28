@@ -11,7 +11,7 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from xgboost import XGBRegressor
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
-from .parent import Parent
+from .__parent import Parent
 
 from rich.console import Console
 from rich.table import Table
@@ -148,8 +148,10 @@ class Regression(Parent):
 
     def compare_model(
         self,
-        output="dict",
-        train_val=False,
+        output: str = "dict",
+        train_val: bool = False,
+        n_splits: int = 5,
+        verbose: bool = True,
     ):
         """
         Compares multiple regression models based on various metrics and returns the results.
@@ -197,18 +199,18 @@ class Regression(Parent):
         console = Console()
 
         with Progress() as progress:
-            if train_val:
-                title = "Train-Validation"
+            if verbose:
                 task = progress.add_task(
                     "[cyan]Running algorithms...", total=len(self.ALGORITHM)
                 )
-
-                for al in self.ALGORITHM:
-                    report = {}
-                    alg = self.ALGORITHM[al].fit(X_train, y_train)
-                    if al in self.model:
-                        alg = self.model[1]
-                    progress.console.print(f"{al} is run ...")
+            for al in self.ALGORITHM:
+                report = {}
+                alg = self.model[1] if al in self.model else self.ALGORITHM[al]
+                if verbose:
+                    progress.advance(task)
+                if train_val:
+                    title = "Train-Validation"
+                    alg = alg.fit(X_train, y_train)
                     pred_train = alg.predict(X_train)
                     pred_val = alg.predict(X_test)
                     report["mae_train"] = self.score(
@@ -231,22 +233,14 @@ class Regression(Parent):
                         y_test, pred_val, "mean_absolute_percentage_error"
                     )
                     report["mape_val"] = mape_val
-                    report["difference_mape"] = (mape_train - mape_val) * 100
+                    report["mape_difference"] = (mape_val - mape_train) * 100
                     result[al] = report
-                    progress.advance(task)
-            else:
-                title = "Cross-Validation"
-                progress.console.print("Using cross-validation ...")
 
-                kfold = KFold(n_splits=5, shuffle=True, random_state=self.dataset.seed)
-                task = progress.add_task(
-                    "[cyan]Running algorithms...", total=len(self.ALGORITHM)
-                )
-                for al in self.ALGORITHM:
-                    alg = self.ALGORITHM[al]
-                    if al in self.model:
-                        alg = self.model[1]
-                    print(f"{al} is run ...")
+                else:
+                    title = f"Cross-Validation (n_splits: {n_splits})"
+                    kfold = KFold(
+                        n_splits=n_splits, shuffle=True, random_state=self.dataset.seed
+                    )
                     report = Regression.__cross_val(
                         metrics=self.METRICS,
                         estimator=alg,
@@ -255,29 +249,27 @@ class Regression(Parent):
                         cv=kfold,
                     )
                     result[al] = report
-                    progress.advance(task)
-        self.result_compare_models = result
 
-        if output == "dataframe":
-            return pd.DataFrame.from_dict(result, orient="index")
-        elif output == "table":
-            console.print()
-            cols = [""] + list(result["Linear Regression"].keys())
-            table = Table(*cols, title=title, box=box.HORIZONTALS)
-            for i, v in result.items():
-                v = [f"{x:.4f}" for x in v.values()]
-                res = [i] + v
-                if i in self.model:
-                    res = [Text(c, style="bold magenta") for c in res]
-                table.add_row(*res)
-            console.print(table)
-        elif output == "only_score":
-            rest = {}
-            for i in result:
-                if title == "Train-Validation":
-                    rest[i] = round(result[i]["mape_val"], 2)
-                else:
-                    rest[i] = round(result[i]["mean_absolute_percentage_error"], 2)
-            return rest
-        else:
-            raise result
+            self.result_compare_models = result
+            if output == "dataframe":
+                return pd.DataFrame.from_dict(result, orient="index")
+            elif output == "table":
+                cols = [""] + list(result["Linear Regression"].keys())
+                table = Table(*cols, title=title, box=box.HORIZONTALS)
+                for i, v in result.items():
+                    v = [f"{x:.4f}" for x in v.values()]
+                    res = [i] + v
+                    if i in self.model:
+                        res = [Text(c, style="bold magenta") for c in res]
+                    table.add_row(*res)
+                console.print(table)
+            elif output == "only_score":
+                rest = {}
+                for i in result:
+                    if title == "Train-Validation":
+                        rest[i] = round(result[i]["mape_val"], 2)
+                    else:
+                        rest[i] = round(result[i]["mean_absolute_percentage_error"], 2)
+                return rest
+            else:
+                return result
