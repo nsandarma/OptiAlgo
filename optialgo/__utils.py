@@ -1,24 +1,5 @@
-from sklearn.impute import SimpleImputer
 import pandas as pd
 import numpy as np
-from sklearn.decomposition import PCA
-
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.over_sampling import SMOTE, RandomOverSampler
-from sklearn.feature_selection import (
-    mutual_info_classif,
-    mutual_info_regression,
-    SelectKBest,
-    chi2,
-    VarianceThreshold,
-    RFE,
-    f_classif,
-)
-from skfeature.function.similarity_based.fisher_score import fisher_score
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from .dataset import Dataset
-
-from . import Classification, Regression
 
 
 # Feature Selection (Filter Methods)
@@ -68,6 +49,8 @@ def feature_select_information_gain(
     >>> print(selected_features)
     ['petal length (cm)', 'petal width (cm)']
     """
+    from sklearn.feature_selection import mutual_info_classif, mutual_info_regression
+
     features = X.columns.tolist()
     if t == "classification":
         importances = list(zip(features, mutual_info_classif(X, y)))
@@ -118,6 +101,8 @@ def feature_select_chi_square(
     >>> print(selected_features)
     ['petal length (cm)', 'petal width (cm)']
     """
+    from sklearn.feature_selection import SelectKBest, chi2
+
     selector = SelectKBest(chi2, k=n_features)
     selector.fit(X, y)
     return selector.get_feature_names_out()
@@ -158,6 +143,8 @@ def feature_select_anova(X: pd.DataFrame, y: pd.DataFrame, n_features: int):
     >>> print(selected_features)
     ['petal length (cm)', 'petal width (cm)']
     """
+    from sklearn.feature_selection import SelectKBest, f_classif
+
     selector = SelectKBest(f_classif, k=n_features)
     selector.fit(X, y)
     return selector.get_feature_names_out()
@@ -201,6 +188,8 @@ def feature_select_fisher_score(
     >>> print(selected_features)
     ['petal width (cm)', 'petal length (cm)']
     """
+    from skfeature.function.similarity_based.fisher_score import fisher_score
+
     importances = list(zip(X.columns, fisher_score(X.values, y.values)))
     importances.sort(key=lambda x: x[1], reverse=True)
     return [i[0] for i in importances[:n_features]]
@@ -237,6 +226,8 @@ def feature_select_variance_threshold(X: pd.DataFrame, threshold: int) -> list:
     >>> print(selected_features)
     ['petal length (cm)', 'petal width (cm)']
     """
+    from sklearn.feature_selection import VarianceThreshold
+
     importances = VarianceThreshold(threshold=threshold).fit(X)
     return importances.get_feature_names_out()
 
@@ -286,6 +277,9 @@ def feature_select_rfe(X: pd.DataFrame, y: pd.DataFrame, n_features: int, t: str
     >>> print(selected_features)
     ['petal width (cm)', 'petal length (cm)']
     """
+    from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+    from sklearn.feature_selection import RFE
+
     if t == "classification":
         model = RandomForestClassifier(random_state=42)
     elif t == "regression":
@@ -347,6 +341,9 @@ def feature_selection(
         ...
     }
     """
+    from .dataset import Dataset
+    from . import Classification, Regression
+
     df = dataframe.copy()
     if not features:
         features = df.drop(target, axis=1).columns.tolist()
@@ -385,6 +382,9 @@ def feature_selection(
     if show_score:
         print(pd.DataFrame().from_dict(result, orient="index"))
     return methods
+
+
+# end feature_selection
 
 
 def handling_missing_values(
@@ -443,6 +443,8 @@ def handling_missing_values(
     - For remaining columns with missing values, numerical columns are imputed using the median, and categorical
       columns are imputed using the most frequent value.
     """
+    from sklearn.impute import SimpleImputer
+
     if threshold >= 1:
         raise ValueError("threshold >= len(dataframe)")
     threshold = threshold * len(dataframe)
@@ -549,6 +551,9 @@ def sampling(
     1    3
     dtype: int64
     """
+    from imblearn.under_sampling import RandomUnderSampler
+    from imblearn.over_sampling import SMOTE, RandomOverSampler
+
     if method == "under":
         sampler = RandomUnderSampler(
             sampling_strategy=sampling_strategy, random_state=seed
@@ -597,12 +602,15 @@ def pca(dataframe: pd.DataFrame, features: list, n_components: int) -> np.ndarra
     >>> transformed_data.shape
     (3, 2)  # Assuming 3 samples and 2 principal components
     """
+    from sklearn.decomposition import PCA
+
     pc = PCA(n_components=n_components)
     pc.fit(dataframe[features])
     X = pc.transform(dataframe[features])
     return X
 
 
+# Detect Outliers
 def detect_outliers_zscore(df: pd.DataFrame, column: str, threshold: float = 3.0):
     """
     Detect outliers in a specified column of a DataFrame using the Z-score method.
@@ -696,6 +704,33 @@ def detect_outliers_iqr(df: pd.DataFrame, column: str):
     return outliers
 
 
+# End detect outliers
+
+
+def check_imbalance(dataframe: pd.DataFrame, target, thresold=0.02):
+    class_distribution = dataframe[target].value_counts(normalize=True)
+    class_minority = class_distribution[class_distribution == class_distribution.min()]
+    imbalance_threshold = thresold
+    if class_distribution.var() >= imbalance_threshold:
+        imbalance_info = f"The {class_minority.index.tolist()} class has an imbalance of {class_minority.values}"
+        print(imbalance_info)
+
+
+def check_missing_value(dataframe):
+    if sum(dataframe.isna().sum().values) > 0:
+        miss_value = {
+            column: value
+            for column, value in dataframe.isna().sum().items()
+            if value != 0
+        }
+
+        s = "there are missing values in columns: {}. cnt miss_value : {}\nPlease use method `handling_missing_value` to solve it".format(
+            miss_value.keys(), miss_value.values()
+        )
+        return s
+    return False
+
+
 __all__ = [
     "feature_selection",
     "feature_select_rfe",
@@ -709,4 +744,6 @@ __all__ = [
     "sampling",
     "detect_outliers_iqr",
     "detect_outliers_zscore",
+    "check_imbalance",
+    "check_missing_value",
 ]

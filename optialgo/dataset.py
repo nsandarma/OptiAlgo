@@ -6,6 +6,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
 from category_encoders import TargetEncoder, OrdinalEncoder
+from . import check_imbalance, check_missing_value
 
 
 class Dataset:
@@ -80,17 +81,9 @@ class Dataset:
         self.__seed = seed
 
         # Missing Values Handler
-        if sum(dataframe.isna().sum().values) > 0:
-            miss_value = {
-                column: value
-                for column, value in dataframe.isna().sum().items()
-                if value != 0
-            }
-
-            s = "there are missing values in columns: {}. cnt miss_value : {}\nPlease use method `handling_missing_value` to solve it".format(
-                miss_value.keys(), miss_value.values()
-            )
-            raise ValueError(s)
+        mv = check_missing_value(dataframe)
+        if mv:
+            raise ValueError(mv)
 
         self.__dataframe = dataframe
 
@@ -206,9 +199,7 @@ class Dataset:
         y_test = self.__test[self.__target].values
         return X_train, X_test, y_train, y_test
 
-    def fit(
-        self, features: list, target: str, encoder: dict = None, check_imbalance=False
-    ):
+    def fit(self, features: list, target: str, encoder: dict = None, ci=False):
         """
         Prepares and fits the dataset for a machine learning task by performing necessary preprocessing steps.
 
@@ -280,8 +271,8 @@ class Dataset:
         stratify = None
         if target:
             if dataframe[target].dtypes == "object":
-                if check_imbalance:
-                    Dataset.__check_imbalance(dataframe, target)
+                if ci:
+                    check_imbalance(dataframe, target)
                 target_encoder = LabelEncoder().fit(dataframe[target].values)
                 dataframe[target] = target_encoder.transform(dataframe[target].values)
                 self.__label_encoder = target_encoder
@@ -379,18 +370,6 @@ class Dataset:
             dataframe, test_size=test_size, random_state=seed, stratify=stratify
         )
         return train, test
-
-    def __check_imbalance(dataframe: pd.DataFrame, target, thresold=0.02):
-        class_distribution = dataframe[target].value_counts(normalize=True)
-        class_minority = class_distribution[
-            class_distribution == class_distribution.min()
-        ]
-
-        imbalance_threshold = thresold
-
-        if class_distribution.var() >= imbalance_threshold:
-            imbalance_info = f"The {class_minority.index.tolist()} class has an imbalance of {class_minority.values}"
-            print(imbalance_info)
 
     def save(self):
         """
