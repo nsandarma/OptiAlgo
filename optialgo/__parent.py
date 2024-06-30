@@ -5,7 +5,7 @@ from sklearn.model_selection import (
 )
 from sklearn.decomposition import PCA
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder, TargetEncoder
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import pandas as pd
 import pickle
 from abc import ABC, abstractmethod
