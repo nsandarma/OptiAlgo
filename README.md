@@ -6,6 +6,7 @@ OptiAlgo menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemu
 ## Fitur
 1. Data Prepration
 2. Data Preprocessing
+3. Text Preprocessing (2x Faster)
 3. Comparing Model
 4. Set Model
 5. Prediction

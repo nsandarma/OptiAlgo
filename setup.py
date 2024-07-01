@@ -9,7 +9,7 @@ with open("requirements.txt", "r") as req_file:
 DESCRIPTION = "OptiAlgo menyediakan solusi cepat dan andal untuk mencari algoritma terbaik bagi pengguna, serta memberikan fleksibilitas dalam menangani berbagai masalah data."
 
 NAME = "optialgo"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 setup(
     name=NAME,
     version=VERSION,
