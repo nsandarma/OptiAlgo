@@ -16,8 +16,20 @@ OptiAlgo menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemu
 
 **Sebelum install OptiAlgo, disarankan membuat environment terlebih dahulu.**
 
-```bash
+```console
 pip install optialgo
+```
+atau
+
+```console
+pip install git+https://github.com/nsandarma/OptiAlgo.git
+```
+
+*dan untuk kebutuhan text preprocessing*
+
+```console
+>>> import nltk
+>>> nltk.download('all')
 ```
 
 ## Cara Menggunakan
@@ -37,7 +49,7 @@ result = clf.compare_model(output='table',train_val=True)
 print(result)
 ```
 
-![image](images/result.png)
+![image](https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/result.png)
 
 untuk lebih lengkap nya anda bisa temukan pada notebook [example](https://github.com/nsandarma/OptiAlgo/blob/master/examples/classification.ipynb)
 
