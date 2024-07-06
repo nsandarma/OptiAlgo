@@ -9,7 +9,6 @@ from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import pandas as pd
 import pickle
 from abc import ABC, abstractmethod
-from .dataset import Dataset
 import warnings
 
 from rich.console import Console
@@ -22,6 +21,8 @@ warnings.filterwarnings("always")
 
 
 class Parent(ABC):
+    from .dataset import Dataset
+
     @abstractmethod
     def __str__(self) -> str: ...
 
@@ -32,8 +33,9 @@ class Parent(ABC):
     def score(self, y_true, y_pred): ...
 
     def __init__(self, dataset: Dataset, algorithm: str = None):
+        from . import Dataset, TextDataset
 
-        if not isinstance(dataset, Dataset):
+        if not isinstance(dataset, (Dataset, TextDataset)):
             raise TypeError(
                 f"Expected object of type {dataset.__name__}, got {type(dataset).__name__} instead."
             )
@@ -76,9 +78,9 @@ class Parent(ABC):
 
         Example
         -------
-        >>> regressor = Regressor(dataset, algorithm='linear_regression')
+        >>> reg = Regression(dataset, algorithm='linear_regression')
         >>> param_grid = {'alpha': [0.1, 0.01, 0.001], 'max_iter': [100, 1000, 10000]}
-        >>> best_score, best_params = regressor.find_best_params(param_grid)
+        >>> best_score, best_params = reg.find_best_params(param_grid)
         >>> print("Best Score:", best_score)
         >>> print("Best Parameters:", best_params)
         """
@@ -116,10 +118,10 @@ class Parent(ABC):
 
         Example
         -------
-        >>> regressor = Regressor(dataset, algorithm='linear_regression')
+        >>> reg = Regession(dataset, algorithm='linear_regression')
         >>> new_params = {'alpha': 0.1, 'max_iter': 1000}
-        >>> regressor.set_params(new_params)
-        >>> print(regressor.model[1].get_params())
+        >>> reg.set_params(new_params)
+        >>> print(reg.model[1].get_params())
         {'alpha': 0.1, 'copy_X': True, 'fit_intercept': True, 'max_iter': 1000, 'normalize': 'deprecated', ...}
         """
         self.model[1].set_params(**params)
@@ -144,9 +146,7 @@ class Parent(ABC):
     def predict(self, X_test: np.ndarray, output=None):
         if not self.model:
             raise ValueError("model not found !")
-
         pred = self.model[1].predict(X_test)
-
         return pred
 
     def predict_cli(self, output="dict"):

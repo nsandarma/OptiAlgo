@@ -7,6 +7,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
 from category_encoders import TargetEncoder, OrdinalEncoder
 from . import check_imbalance, check_missing_value
+from typing import Literal, Optional, Union
 
 
 class Dataset:
@@ -20,7 +21,7 @@ class Dataset:
         self,
         dataframe: pd.DataFrame,
         norm: bool = False,
-        test_size: int = 0.2,
+        test_size: float = 0.2,
         seed: int = 42,
     ):
         """
@@ -199,7 +200,14 @@ class Dataset:
         y_test = self.__test[self.__target].values
         return X_train, X_test, y_train, y_test
 
-    def fit(self, features: list, target: str, encoder: dict = None, ci=False):
+    def fit(
+        self,
+        features: list,
+        target: Optional[str],
+        t: Literal["classification", "regression"],
+        encoder: dict = None,
+        ci=False,
+    ):
         """
         Prepares and fits the dataset for a machine learning task by performing necessary preprocessing steps.
 
@@ -264,39 +272,35 @@ class Dataset:
         >>> dataset = Dataset(dataframe)
         >>> dataset.fit(features=['feature1', 'feature2'], target='target_column', check_imbalance=True)
         """
-        t = "clustering"
 
-        dataframe = self.dataframe.copy()
+        dataframe = self.__dataframe.copy()
 
         stratify = None
+
         if target:
-            if dataframe[target].dtypes == "object":
+            if t == "classification":
                 if ci:
-                    check_imbalance(dataframe, target)
+                    check_imbalance(dataframe=dataframe, target=target)
                 target_encoder = LabelEncoder().fit(dataframe[target].values)
                 dataframe[target] = target_encoder.transform(dataframe[target].values)
                 self.__label_encoder = target_encoder
                 stratify = dataframe[target]
-                t = "classification"
                 self.class_type = (
                     "binary"
                     if len(dataframe[target].value_counts().values) == 2
                     else "multiclass"
                 )
-
-            else:
-                t = "regression"
             self.__target = target
+        else:
+            t = "clustering"
 
         self.t = t
 
-        train, test = Dataset.__train_test_split(
-            dataframe, test_size=self.__test_size, seed=self.__seed, stratify=stratify
+        train, test = Dataset.train_test_split(
+            dataframe, test_size=self.test_size, seed=self.seed, stratify=stratify
         )
 
-        pipeline = Dataset.__preprocessing(
-            train, features, target, self.__norm, encoder
-        )
+        pipeline = Dataset.__preprocessing(train, features, target, self.norm, encoder)
 
         self.__pipeline = pipeline
 
@@ -362,7 +366,7 @@ class Dataset:
 
         return pipeline
 
-    def __train_test_split(dataframe, test_size: float, seed: int, stratify):
+    def train_test_split(dataframe, test_size: float, seed: int, stratify):
         if test_size >= 0.5:
             raise ValueError("test size >= 0.5 !")
 

@@ -13,6 +13,7 @@ from sklearn.metrics import (
     roc_auc_score,
     classification_report,
 )
+from typing import Literal, Optional
 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
@@ -43,7 +44,7 @@ class Classification(Parent):
         "Naive Bayes": MultinomialNB(),
         "K-Nearest Neighbor": KNeighborsClassifier(),
         "SVM": SVC(),
-        "Logistic Regression": LogisticRegression(max_iter=3000),
+        "Logistic Regression": LogisticRegression(max_iter=4000),
         "Random Forest": RandomForestClassifier(),
         "Decision Tree": DecisionTreeClassifier(),
         "XGBoost": XGBClassifier(),
@@ -57,7 +58,22 @@ class Classification(Parent):
     }
     model_type = "Classification"
 
-    def __init__(self, dataset: Dataset, algorithm: str = None):
+    def __init__(
+        self,
+        dataset: Dataset,
+        algorithm: Optional[
+            Literal[
+                "Naive Bayes",
+                "K-Nearest Neighbor",
+                "SVM",
+                "Logistic Regression",
+                "Random Forest",
+                "Decision Tree",
+                "XGBoost",
+                "Gradient Boosting",
+            ]
+        ] = None,
+    ):
         """
         Initializes the class with the provided dataset and algorithm.
 
@@ -75,6 +91,7 @@ class Classification(Parent):
         Example
         -------
         >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        >>> dataset.fit(features=features,target=target)
         >>> classifier = Classifier(dataset, algorithm='random_forest')
         """
         if dataset.class_type == "binary":
@@ -166,7 +183,7 @@ class Classification(Parent):
 
     def compare_model(
         self,
-        output: str = "dict",
+        output: Literal["dict", "dataframe", "table", "only_score"] = "dict",
         train_val: bool = True,
         n_splits: int = 5,
         verbose: bool = True,
@@ -208,6 +225,7 @@ class Classification(Parent):
         Example
         -------
         >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        >>> dataset.fit(features=features,target=target)
         >>> classifier = Classifier(dataset, algorithm='random_forest')
         >>> results = classifier.compare_model(output='dataframe', train_val=True)
         >>> print(results)
