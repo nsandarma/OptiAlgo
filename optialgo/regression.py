@@ -190,6 +190,7 @@ class Regression(Parent):
         Example
         -------
         >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        >>> dataset.fit(features=features,target=target)
         >>> regressor = Regressor(dataset, algorithm='random_forest')
         >>> results = regressor.compare_model(output='dataframe', train_val=True)
         >>> print(results)

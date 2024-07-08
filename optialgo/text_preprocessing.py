@@ -951,6 +951,54 @@ def text_manipulation(
 
 
 class Tokenizer:
+    """
+    A class to tokenize text data, transform it into sequences, and pad sequences.
+
+    Attributes
+    ----------
+    min_count : Optional[int]
+        Minimum frequency count for words to be included in the vocabulary.
+    filters : Optional[str]
+        Characters to filter out from the text.
+    oov_token : str
+        Token to use for out-of-vocabulary words.
+    maxlen : int
+        Maximum length of sequences. If 0, it will be calculated based on the data.
+    padding : Literal["pre", "post"]
+        Padding type ("pre" or "post").
+    truncating : Literal["pre", "post"]
+        Truncating type ("pre" or "post").
+    value : int
+        Value used for padding.
+    dtype : str
+        Data type of the padded sequences.
+    
+    Methods
+    -------
+    fit(data: Union[List[str], List[Tuple[str]]], y=None)
+        Fits the tokenizer on the given data.
+    transform(data)
+        Transforms the given data into padded sequences.
+    encode(text: str) -> list
+        Encodes a single text string into a sequence of integers.
+    decode(token: list) -> str
+        Decodes a sequence of integers back into a text string.
+    texts_to_sequences(text: list) -> list
+        Converts a list of text strings into sequences of integers.
+    sequences_to_texts(sequences: list) -> list
+        Converts a list of sequences of integers back into text strings.
+    sequences_to_pad(sequences: list)
+        Pads a list of sequences to the maximum length.
+    texts_to_pad_sequences(text: list)
+        Converts a list of text strings into padded sequences.
+    
+    Properties
+    ----------
+    word_index : dict
+        A dictionary mapping words to their integer indices.
+    index_word : dict
+        A dictionary mapping integer indices to their corresponding words.
+    """
 
     def __init__(
         self,
@@ -963,6 +1011,28 @@ class Tokenizer:
         value: int = 0,
         dtype="int32",
     ):
+        """
+        Initializes the Tokenizer with the specified parameters.
+
+        Parameters
+        ----------
+        oov_token : str, optional
+            Token to use for out-of-vocabulary words (default is None).
+        filters : Optional[str], optional
+            Characters to filter out from the text (default is string.punctuation).
+        min_count : Optional[int], optional
+            Minimum frequency count for words to be included in the vocabulary (default is None).
+        maxlen : int, optional
+            Maximum length of sequences (default is 0, which means it will be calculated based on the data).
+        padding : Literal["pre", "post"], optional
+            Padding type ("pre" or "post", default is "pre").
+        truncating : Literal["pre", "post"], optional
+            Truncating type ("pre" or "post", default is "pre").
+        value : int, optional
+            Value used for padding (default is 0).
+        dtype : str, optional
+            Data type of the padded sequences (default is "int32").
+        """
         self.min_count = min_count
         self.filters = filters
         self.oov_token = oov_token
@@ -973,6 +1043,21 @@ class Tokenizer:
         self.dtype = dtype
 
     def fit(self, data: Union[List[str], List[Tuple[str]]], y=None):
+        """
+        Fits the tokenizer on the given data.
+
+        Parameters
+        ----------
+        data : Union[List[str], List[Tuple[str]]]
+            The input data to fit the tokenizer on.
+        y : optional
+            Not used, present for compatibility with sklearn API.
+
+        Returns
+        -------
+        Tokenizer
+            The fitted Tokenizer object.
+        """
         import pandas as pd
 
         if isinstance(data, pd.DataFrame):
@@ -1001,14 +1086,39 @@ class Tokenizer:
         return self
 
     def transform(self, data):
+        """
+        Transforms the given data into padded sequences.
+
+        Parameters
+        ----------
+        data : Union[List[str], List[Tuple[str]]]
+            The input data to transform.
+
+        Returns
+        -------
+        np.ndarray
+            The transformed and padded sequences.
+        """
         import pandas as pd
 
         if isinstance(data, pd.DataFrame):
             data = data.values.reshape(-1)
         return self.texts_to_pad_sequences(data)
 
-    def encode(self, text: str):
+    def encode(self, text: str) -> list:
+        """
+        Encodes a single text string into a sequence of integers.
 
+        Parameters
+        ----------
+        text : str
+            The text string to encode.
+
+        Returns
+        -------
+        list
+            The encoded sequence of integers.
+        """
         if self.oov_token:
             return [
                 self.__str_to_int[token] if token in self.words else 0
@@ -1021,27 +1131,75 @@ class Tokenizer:
                 if token in self.words
             ]
 
-    def decode(self, token: list):
+    def decode(self, token: list) -> str:
+        """
+        Decodes a sequence of integers back into a text string.
 
+        Parameters
+        ----------
+        token : list
+            The sequence of integers to decode.
+
+        Returns
+        -------
+        str
+            The decoded text string.
+        """
         return " ".join([self.__int_to_str[t] for t in token if t in self.__int_to_str])
 
     def texts_to_sequences(self, text: list) -> list:
+        """
+        Converts a list of text strings into sequences of integers.
 
+        Parameters
+        ----------
+        text : list
+            The list of text strings to convert.
+
+        Returns
+        -------
+        list
+            The list of sequences of integers.
+        """
         return [
             self.encode(f_remove_punctuation(s, punctuation=self.filters)) for s in text
         ]
 
     def sequences_to_texts(self, sequences: list) -> list:
+        """
+        Converts a list of sequences of integers back into text strings.
 
+        Parameters
+        ----------
+        sequences : list
+            The list of sequences of integers to convert.
+
+        Returns
+        -------
+        list
+            The list of decoded text strings.
+        """
         return [self.decode(s) for s in sequences]
 
     def sequences_to_pad(self, sequences: list):
+        """
+        Pads a list of sequences to the maximum length.
 
+        Parameters
+        ----------
+        sequences : list
+            The list of sequences to pad.
+
+        Returns
+        -------
+        np.ndarray
+            The padded sequences.
+        """
         import numpy as np
 
         maxlen = self.maxlen
 
-        # Menyiapkan array hasil dengan tipe data dan ukuran yang sesuai
+        # Prepare the result array with the appropriate type and size
         padded_sequences = np.full(
             (len(sequences), maxlen), self.value, dtype=self.dtype
         )
@@ -1064,19 +1222,46 @@ class Tokenizer:
         return padded_sequences
 
     def texts_to_pad_sequences(self, text: list):
+        """
+        Converts a list of text strings into padded sequences.
 
+        Parameters
+        ----------
+        text : list
+            The list of text strings to convert.
+
+        Returns
+        -------
+        np.ndarray
+            The padded sequences.
+        """
         sequences = self.texts_to_sequences(text)
         return self.sequences_to_pad(sequences)
 
     @property
     def word_index(self):
+        """
+        Returns the word-to-index dictionary.
 
+        Returns
+        -------
+        dict
+            The word-to-index dictionary.
+        """
         return self.__str_to_int
 
     @property
     def index_word(self):
+        """
+        Returns the index-to-word dictionary.
 
+        Returns
+        -------
+        dict
+            The index-to-word dictionary.
+        """
         return self.__int_to_str
+
 
 
 def count_words(

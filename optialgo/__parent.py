@@ -1,21 +1,10 @@
 from sklearn.model_selection import (
     GridSearchCV,
-    train_test_split,
-    StratifiedKFold,
 )
-from sklearn.decomposition import PCA
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
-import pandas as pd
 import pickle
 from abc import ABC, abstractmethod
 import warnings
-
-from rich.console import Console
-from rich.table import Table
-from rich.prompt import Prompt
-from rich import box
-from rich.text import Text
 
 warnings.filterwarnings("always")
 
@@ -143,31 +132,32 @@ class Parent(ABC):
             model = ()
         self.__model = model
 
-    def predict(self, X_test: np.ndarray, output=None):
+    def predict(self, X_test: np.ndarray, transform: bool = True):
+        """
+        Predict for the given test data.
+
+        Parameters
+        ----------
+        X_test : np.ndarray
+            The test data to predict labels for.
+        transform : bool, optional
+            Whether to transform the test data using `flow_from_array` method before prediction (default is True).
+
+        Returns
+        -------
+        np.ndarray
+            The predicted for the test data.
+
+        Raises
+        ------
+        ValueError
+            If the model is not found.
+        """
         if not self.model:
             raise ValueError("model not found !")
+        X_test = self.dataset.flow_from_array(X_test) if transform else X_test
         pred = self.model[1].predict(X_test)
-        return pred
-
-    def predict_cli(self, output="dict"):
-        if not self.model:
-            raise NotImplementedError("model not found !")
-        features = self.dataset.feature_names
-        console = Console()
-        console.print(
-            Text("Welcome to the Rich CLI Application!", style="bold underline magenta")
-        )
-        X = []
-        for i in features:
-            f = Prompt.ask(f"{i}", default="q")
-            if f == "q":
-                console.print("Quitting the application. Goodbye!")
-                return False
-            X.append(f)
-        X = self.dataset.flow_from_array(np.array([X]))
-        pred = self.predict(X)
-        pred = self.dataset.get_label(pred)
-        console.print(pred)
+        return self.dataset.get_label(pred)
 
     def save(self):
         """
