@@ -548,7 +548,6 @@ def get_norm_words_idn():
     return norm_words
 
 
-@lru_cache(maxsize=None)
 def f_normalize(
     token: Union[Tuple[str], str], norm_words: dict, return_token: bool = False
 ) -> Union[Tuple[str, ...], str]:
@@ -972,7 +971,7 @@ class Tokenizer:
         Value used for padding.
     dtype : str
         Data type of the padded sequences.
-    
+
     Methods
     -------
     fit(data: Union[List[str], List[Tuple[str]]], y=None)
@@ -991,7 +990,7 @@ class Tokenizer:
         Pads a list of sequences to the maximum length.
     texts_to_pad_sequences(text: list)
         Converts a list of text strings into padded sequences.
-    
+
     Properties
     ----------
     word_index : dict
@@ -1261,7 +1260,6 @@ class Tokenizer:
             The index-to-word dictionary.
         """
         return self.__int_to_str
-
 
 
 def count_words(

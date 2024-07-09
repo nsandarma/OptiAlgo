@@ -10,6 +10,7 @@ import pandas as pd
 from typing import Union, Optional, Literal, List
 import numpy as np
 
+
 class TextDataset:
     """
     A class to handle text data preprocessing and manipulation for machine learning tasks.
@@ -36,7 +37,7 @@ class TextDataset:
         The vectorizer used in the pipeline.
     label_encoder : sklearn.preprocessing.LabelEncoder
         The label encoder used for target labels.
-    
+
     Methods
     -------
     flow_from_dataframe(X: pd.DataFrame) -> np.ndarray
@@ -382,7 +383,7 @@ class TextDataset:
         -------
         sklearn.preprocessing.LabelEncoder
             The label encoder used for target labels.
-        
+
         Raises
         ------
         ValueError
