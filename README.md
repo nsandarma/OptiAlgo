@@ -1,5 +1,5 @@
 # OptiAlgo
-OptiAlgo menyediakan solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual.
+Solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual.
 
 ![image](https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/demo.gif)
 

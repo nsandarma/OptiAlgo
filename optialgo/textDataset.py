@@ -1,13 +1,13 @@
 from . import (
     Dataset,
     check_missing_value,
-    text_clean,
-    text_manipulation,
+    text_clean as f_text_clean,
+    text_manipulation as f_text_manipulation,
     check_imbalance,
     Tokenizer,
 )
 import pandas as pd
-from typing import Union, Optional, Literal, List
+from typing import Union, Optional, Literal, Callable
 import numpy as np
 
 
@@ -203,11 +203,9 @@ class TextDataset:
         self,
         feature: str,
         target: Optional[str],
-        lang: str,
         t: Literal["classification", "regression"],
         vectorizer: Union[Literal["tfidf", "count_vect"], Tokenizer] = "tfidf",
-        verbose: bool = False,
-        ci: bool = False,
+        ci: bool = False
     ):
         """
         Fits the preprocessing pipeline and prepares the data for training and testing.
@@ -218,8 +216,6 @@ class TextDataset:
             The feature column to use for training.
         target : Optional[str]
             The target column to use for training.
-        lang : str
-            The language of the text data.
         t : Literal["classification", "regression"]
             The type of task (classification or regression).
         vectorizer : Union[Literal["tfidf", "count_vect"], Tokenizer], optional
@@ -237,13 +233,7 @@ class TextDataset:
         from sklearn.preprocessing import LabelEncoder
 
         dataframe = self.dataframe.copy()
-
-        texts = text_clean(
-            dataframe[feature].tolist(), return_token=True, verbose=verbose
-        )
-        texts = text_manipulation(texts, lang=lang, verbose=verbose)
-        dataframe[feature] = texts
-
+        
         stratify = None
 
         if target:

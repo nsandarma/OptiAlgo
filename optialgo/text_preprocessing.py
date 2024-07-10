@@ -396,6 +396,9 @@ def text_clean(
     idx = None
     if duplicates:
         idx = find_duplicates(data)
+        if idx:
+            sample = list(idx.values())[:5]
+            print(f"Duplication found in data: {sample} ...")
         datac = list(dict.fromkeys(data))
         data = datac.copy()
     else:

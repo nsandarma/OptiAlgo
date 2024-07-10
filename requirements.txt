@@ -1,4 +1,4 @@
-scikit-learn==1.4
+scikit-learn
 skfeature-chappers
 xgboost
 imblearn
@@ -11,6 +11,5 @@ rich
 tqdm
 nltk
 sastrawi
-nlp_id
-
-
+nlp_id==0.1.16.0
+ipywidgets
