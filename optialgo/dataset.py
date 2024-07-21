@@ -7,7 +7,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
 from category_encoders import TargetEncoder, OrdinalEncoder
 from . import check_imbalance, check_missing_value
-from typing import Literal, Optional, Union
+from typing import Literal, Optional
 
 
 class Dataset:
@@ -27,54 +27,20 @@ class Dataset:
         """
         Initializes the Dataset object with the provided dataframe and configuration settings.
 
-        Parameters
-        ----------
-        dataframe : pd.DataFrame
-            The input dataframe containing the data to be processed and used for model training.
+        Args:
+            dataframe: The input dataframe containing the data to be processed and used for model training.
+            norm: A flag indicating whether to normalize the features. Default is False.
+            test_size: The proportion of the dataset to include in the test split. Default is 0.2 (20%).
+            seed: The random seed for reproducibility of the train-test split. Default is 42.
 
-        norm : bool, optional
-            A flag indicating whether to normalize the features. Default is False.
+        Raises:
+            ValueError: If there are missing values in the input dataframe, an error is raised with information on which columns contain missing values.
 
-        test_size : int, optional
-            The proportion of the dataset to include in the test split. Default is 0.2 (20%).
-
-        seed : int, optional
-            The random seed for reproducibility of the train-test split. Default is 42.
-
-        Attributes
-        ----------
-        test_size : int
-            The proportion of the dataset to include in the test split.
-
-        norm : bool
-            A flag indicating whether to normalize the features.
-
-        seed : int
-            The random seed for reproducibility of the train-test split, etc.
-
-        dataframe : pd.DataFrame
-            The input dataframe after validation.
-
-        Raises
-        ------
-        ValueError
-            If there are missing values in the input dataframe, an error is raised with information on which columns contain missing values.
-
-        Notes
-        -----
-        This constructor performs initial setup and validation for the Dataset object, including:
-        1. Storing the test size, normalization flag, and random seed.
-        2. Checking for missing values in the input dataframe and raising an error if any are found.
-
-        Example
-        -------
-        >>> df = pd.DataFrame({'feature1': [1, 2, 3], 'feature2': [4, 5, None]})
-        >>> dataset = Dataset(df)
-        ValueError: there are missing values in columns: dict_keys(['feature2']). cnt miss_value : dict_values([1])
-        Please use method `handling_missing_value` to solve it
-
-        >>> df = pd.DataFrame({'feature1': [1, 2, 3], 'feature2': [4, 5, 6]})
-        >>> dataset = Dataset(df)
+        Examples:
+        ```python
+        df = pd.read_csv("house_prices.csv")
+        dataset = Dataset(dataframe=df)
+        ```
         """
 
         self.__test_size = test_size
@@ -92,21 +58,19 @@ class Dataset:
         """
         Transforms the input dataframe using the preprocessing pipeline.
 
-        Parameters
-        ----------
-        X : pd.DataFrame
-            The input dataframe to be transformed.
+        Args:
+            X: The input dataframe to be transformed.
 
-        Returns
-        -------
-        np.ndarray
-            The transformed data as a NumPy array.
+        Returns:
+            np.ndarray: The transformed data as a NumPy array.
 
-        Example
-        -------
-        >>> transformed_X = dataset.flow_from_dataframe(new_data)
-        >>> transformed_X.shape
-        (100, 10)  # Assuming new_data has 100 samples and the pipeline transforms it into 10 features
+        Examples:
+        ```python
+        new_data = pd.DataFrame({"col_a": [1,2,3],"col_b":[1,1,1], "col_c" : [2,2,2]})
+        transformed_X = dataset.flow_from_dataframe(new_data)
+        print(transformed_X.shape)
+        # output : (3,3)
+        ```
         """
         return self.pipeline.transform(X)
 
@@ -114,52 +78,45 @@ class Dataset:
         """
         Transforms the input array using the preprocessing pipeline.
 
-        Parameters
-        ----------
-        X : np.ndarray
-            The input array to be transformed. It should have the same number of features
-            as the training data and in the same order.
+        Args:
+            X : The input array to be transformed. It should have the same number of features as the training data and in the same order.
 
-        Returns
-        -------
-        np.ndarray
+        Returns:
             The transformed data as a NumPy array.
 
-        Example
-        -------
-        >>> input_array = np.array([[1, 2, 3], [4, 5, 6]])
-        >>> transformed_array = dataset.flow_from_array(input_array)
-        >>> transformed_array.shape
-        (2, 10)  # Assuming the pipeline transforms it into 10 features
+        Examples:
+        ```python
+        input_array = np.array([[1, 2, 3], [4, 5, 6]])
+        transformed_array = dataset.flow_from_array(input_array)
+        print(transformed_array.shape)
+        # output : (2, 3)
+        # Assuming the pipeline transforms it into 3 features
+        ```
         """
         X = pd.DataFrame(X, columns=self.__feature_names_in_)
         return self.pipeline.transform(X)
 
-    def get_label(self, y_pred: np.ndarray):
+    def get_label(self, y_pred: np.ndarray) -> np.ndarray:
         """
         Converts predicted numerical labels back to their original categorical labels using the label encoder.
 
-        Parameters
-        ----------
-        y_pred : np.ndarray
-            The predicted numerical labels to be converted.
+        Args:
+            y_pred: The predicted numerical labels to be converted.
 
-        Returns
-        -------
-        np.ndarray
+        Returns:
             The original categorical labels corresponding to the numerical predictions.
 
-        Raises
-        ------
-        ValueError
-            If the label encoder has not been fitted or is not available.
+        Raises:
+            ValueError: If the label encoder has not been fitted or is not available.
 
-        Example
-        -------
-        >>> y_pred = np.array([0, 1, 2])
-        >>> original_labels = dataset.get_label(y_pred)
-        >>> original_labels
-        array(['class1', 'class2', 'class3'], dtype=object)  # Assuming these were the original labels
+        Examples:
+        ```python
+        y_pred = np.array([0, 1, 2])
+        original_labels = dataset.get_label(y_pred)
+        print(original_labels)
+        # output : array(['class1', 'class2', 'class3'], dtype=object)
+        ```
+
         """
         if not hasattr(self, "label_encoder"):
             raise ValueError("label_encoder not found !")
@@ -169,30 +126,13 @@ class Dataset:
         """
         Splits the preprocessed training and testing data into features and target arrays.
 
-        Returns
-        -------
-        tuple
-            A tuple containing four elements:
-            - X_train : np.ndarray
-                The feature matrix for the training set.
-            - X_test : np.ndarray
-                The feature matrix for the testing set.
-            - y_train : np.ndarray
-                The target vector for the training set.
-            - y_test : np.ndarray
-                The target vector for the testing set.
+        Returns:
+            tuple : A tuple containing four elements: X_train, X_test, y_train, y_test
 
-        Example
-        -------
-        >>> X_train, X_test, y_train, y_test = dataset.get_x_y()
-        >>> X_train.shape
-        (80, 10)  # Assuming 80 training samples and 10 features
-        >>> y_train.shape
-        (80,)  # Assuming 80 training samples
-        >>> X_test.shape
-        (20, 10)  # Assuming 20 testing samples and 10 features
-        >>> y_test.shape
-        (20,)  # Assuming 20 testing samples
+        Examples:
+        ```python
+        X_train, X_test, y_train, y_test = dataset.get_x_y()
+        ```
         """
         X_train = self.__train[self.__features].values
         y_train = self.__train[self.__target].values
@@ -211,66 +151,45 @@ class Dataset:
         """
         Prepares and fits the dataset for a machine learning task by performing necessary preprocessing steps.
 
-        Parameters
-        ----------
-        features : list
-            A list of feature column names to be used for model training.
+        Args:
+            features: A list of feature column names to be used for model training.
+            target: The name of the target column.
+            t: classification or regression
+            encoder: A dictionary specifying custom encoders for specific columns. If None, default encoders are used.
+            check_imbalance: If True, checks for class imbalance in the target column for classification tasks. If an imbalance is detected, it triggers the imbalance handling procedure.
 
-        target : str
-            The name of the target column. Determines the type of machine learning task:
-            - If the target column is of type `object`, the task is classified as `classification`.
-            - If the target column is numeric, the task is classified as `regression`.
+        Attributes:
+            t: The type of machine learning task (`clustering`, `classification`, or `regression`).
+            class_type: The classification type (`binary` or `multiclass`) if the task is classification.
+            train: The preprocessed training dataset.
+            test: The preprocessed testing dataset.
+            pipeline: The preprocessing pipeline used for transforming the data.
+            features: The list of feature names after preprocessing.
+            feature_names: The original feature names before preprocessing.
+            target: The target column name.
+            label_encoder: The label encoder used for encoding the target column if it is categorical.
 
-        encoder : dict, optional
-            A dictionary specifying custom encoders for specific columns. If None, default encoders are used.
+        Notes:
+            This method performs the following steps:
+                ```
+                1. Determines the task type (clustering, classification, or regression) based on the target column.
+                2. Encodes the target column if it is categorical.
+                3. Checks for class imbalance if `ci` is True.
+                4. Splits the dataset into training and testing sets.
+                5. Applies preprocessing to the features using the specified or default encoders.
+                6. Stores the preprocessed training and testing datasets for model training.
+                ```
 
-        check_imbalance : bool, optional
-            If True, checks for class imbalance in the target column for classification tasks.
-            If an imbalance is detected, it triggers the imbalance handling procedure.
+        Examples:
+        ```python
+        dataset = Dataset(dataframe=df)
+        dataset.fit(features=["feature1", "feature2", "feature_3"], target='target_column', t= "classification", check_imbalance=True)
 
-        Attributes
-        ----------
-        t : str
-            The type of machine learning task (`clustering`, `classification`, or `regression`).
+        # if with custom encoder
+        encoder = {"one_hot":["feature_1","feature_2"], "target_mean": ["feature_3"]}
+        dataset.fit(features=["feature1", "feature2", "feature_3"], target='target_column', t= "classification", check_imbalance=True, encoder= encoder)
 
-        class_type : str
-            The classification type (`binary` or `multiclass`) if the task is classification.
-
-        train : pd.DataFrame
-            The preprocessed training dataset.
-
-        test : pd.DataFrame
-            The preprocessed testing dataset.
-
-        pipeline : sklearn.pipeline.Pipeline
-            The preprocessing pipeline used for transforming the data.
-
-        features : list
-            The list of feature names after preprocessing.
-
-        feature_names : list
-            The original feature names before preprocessing.
-
-        target : str
-            The target column name.
-
-        label_encoder : sklearn.preprocessing.LabelEncoder
-            The label encoder used for encoding the target column if it is categorical.
-
-        Notes
-        -----
-        This method performs the following steps:
-        1. Determines the task type (clustering, classification, or regression) based on the target column.
-        2. Encodes the target column if it is categorical.
-        3. Checks for class imbalance if `check_imbalance` is True.
-        4. Splits the dataset into training and testing sets.
-        5. Applies preprocessing to the features using the specified or default encoders.
-        6. Stores the preprocessed training and testing datasets for model training.
-
-        Example
-        -------
-        >>> dataset = Dataset(dataframe)
-        >>> dataset.fit(features=['feature1', 'feature2'], target='target_column', check_imbalance=True)
+        ```
         """
 
         dataframe = self.__dataframe.copy()
@@ -413,7 +332,7 @@ class Dataset:
         return self.__dataframe
 
     @property
-    def train(self):
+    def train(self) -> pd.DataFrame:
         return self.__train
 
     @property
@@ -421,7 +340,7 @@ class Dataset:
         return self.__test
 
     @property
-    def test_size(self):
+    def test_size(self) -> float:
         return self.__test_size
 
     @property

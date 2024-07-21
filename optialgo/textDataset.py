@@ -15,41 +15,6 @@ class TextDataset:
     """
     A class to handle text data preprocessing and manipulation for machine learning tasks.
 
-    Attributes
-    ----------
-    test_size : float
-        Proportion of the dataset to include in the test split.
-    seed : int
-        Random seed for reproducibility.
-    feature : str
-        The feature column used for model training.
-    target : str
-        The target column used for model training.
-    dataframe : pd.DataFrame
-        The original dataframe containing the dataset.
-    train : np.ndarray
-        The training data.
-    test : np.ndarray
-        The testing data.
-    pipeline : sklearn.pipeline.Pipeline
-        The preprocessing pipeline.
-    vectorizer : sklearn.feature_extraction.text.Vectorizer
-        The vectorizer used in the pipeline.
-    label_encoder : sklearn.preprocessing.LabelEncoder
-        The label encoder used for target labels.
-
-    Methods
-    -------
-    flow_from_dataframe(X: pd.DataFrame) -> np.ndarray
-        Transforms the feature column of the given dataframe using the preprocessing pipeline.
-    flow_from_array(X: np.ndarray)
-        Transforms the given array using the preprocessing pipeline.
-    get_label(y_pred: np.ndarray) -> np.ndarray
-        Converts predicted labels back to their original form using the label encoder.
-    fit(feature: str, target: Optional[str], lang: str, t: Literal["classification", "regression"], vectorizer: Union[Literal["tfidf", "count_vect"], Tokenizer] = "tfidf", verbose: bool = False, ci: bool = False)
-        Fits the preprocessing pipeline and prepares the data for training and testing.
-    get_x_y() -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
-        Returns the train and test splits of features and labels.
     """
 
     def __str__(self):
@@ -59,19 +24,13 @@ class TextDataset:
         """
         Initializes the TextDataset with a dataframe, test size, and random seed.
 
-        Parameters
-        ----------
-        dataframe : pd.DataFrame
-            The input dataframe containing the dataset.
-        test_size : float, optional
-            Proportion of the dataset to include in the test split (default is 0.2).
-        seed : int, optional
-            Random seed for reproducibility (default is 42).
+        Args:
+            dataframe: The input dataframe containing the dataset.
+            test_size: Proportion of the dataset to include in the test split (default is 0.2).
+            seed: Random seed for reproducibility (default is 42).
 
-        Raises
-        ------
-        ValueError
-            If there are missing values in the dataframe.
+        Raises:
+            ValueError: If there are missing values in the dataframe.
         """
         self.test_size = test_size
         self.seed = seed
@@ -85,61 +44,45 @@ class TextDataset:
         """
         Transforms the feature column of the given dataframe using the preprocessing pipeline.
 
-        Parameters
-        ----------
-        X : pd.DataFrame
-            The input dataframe to transform.
+        Args:
+            X : The input dataframe to transform.
 
-        Returns
-        -------
-        np.ndarray
+        Returns:
             The transformed feature column.
 
-        Raises
-        ------
-        KeyError
-            If the feature column is not in the dataframe.
+        Raises:
+            KeyError : If the feature column is not in the dataframe.
         """
         if self.feature not in X.columns:
             raise KeyError("feature not in X")
         return self.pipeline.transform(X[self.feature])
 
-    def flow_from_array(self, X: np.ndarray):
+    def flow_from_array(self, X: np.ndarray) -> np.ndarray:
         """
         Transforms the given array using the preprocessing pipeline.
 
-        Parameters
-        ----------
-        X : np.ndarray
-            The input array to transform.
+        Args:
+            X : The input array to transform.
 
-        Returns
-        -------
-        np.ndarray
+        Returns:
             The transformed array.
         """
         if X.ndim == 2:
             X = X.reshape(-1)
         return self.pipeline.transform(X).toarray()
 
-    def get_label(self, y_pred: np.ndarray):
+    def get_label(self, y_pred: np.ndarray) -> np.ndarray:
         """
         Converts predicted labels back to their original form using the label encoder.
 
-        Parameters
-        ----------
-        y_pred : np.ndarray
-            The predicted labels.
+        Args:
+            y_pred : The predicted labels.
 
-        Returns
-        -------
-        np.ndarray
+        Returns:
             The original labels.
 
-        Raises
-        ------
-        ValueError
-            If the label encoder is not found.
+        Raises:
+            ValueError: If the label encoder is not found.
         """
         if not hasattr(self, "label_encoder"):
             raise ValueError("label_encoder not found!")
@@ -151,22 +94,16 @@ class TextDataset:
         """
         Preprocesses the dataframe using the specified vectorizer.
 
-        Parameters
-        ----------
-        dataframe : pd.DataFrame
-            The input dataframe to preprocess.
-        vectorizer : Union[str, TfidfVectorizer, CountVectorizer]
-            The vectorizer to use for preprocessing.
+        Args:
+            dataframe : The input dataframe to preprocess.
+            vectorizer : The vectorizer to use for preprocessing.
 
-        Returns
-        -------
-        tuple
-            The preprocessing pipeline and vectorizer.
+        Returns:
+            tuple
+                The preprocessing pipeline and vectorizer.
 
-        Raises
-        ------
-        TypeError
-            If the vectorizer is not found.
+        Raises:
+            TypeError: If the vectorizer is not found.
         """
         from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
         from sklearn.pipeline import Pipeline
@@ -184,13 +121,11 @@ class TextDataset:
         pipeline.fit(dataframe)
         return pipeline, vectorizer
 
-    def get_x_y(self):
+    def get_x_y(self) -> tuple:
         """
         Returns the train and test splits of features and labels.
 
-        Returns
-        -------
-        tuple
+        Returns:
             The training features, testing features, training labels, and testing labels.
         """
         X_train = self.train[:, :-1]
@@ -205,35 +140,26 @@ class TextDataset:
         target: Optional[str],
         t: Literal["classification", "regression"],
         vectorizer: Union[Literal["tfidf", "count_vect"], Tokenizer] = "tfidf",
-        ci: bool = False
+        ci: bool = False,
     ):
         """
         Fits the preprocessing pipeline and prepares the data for training and testing.
 
-        Parameters
-        ----------
-        feature : str
-            The feature column to use for training.
-        target : Optional[str]
-            The target column to use for training.
-        t : Literal["classification", "regression"]
-            The type of task (classification or regression).
-        vectorizer : Union[Literal["tfidf", "count_vect"], Tokenizer], optional
-            The vectorizer to use for preprocessing (default is "tfidf").
-        verbose : bool, optional
-            Whether to print verbose output (default is False).
-        ci : bool, optional
-            Whether to check for class imbalance (default is False).
+        Args:
+            feature: The feature column to use for training.
+            target : The target column to use for training.
+            t : The type of task (classification or regression).
+            vectorizer : The vectorizer to use for preprocessing (default is "tfidf").
+            verbose : Whether to print verbose output (default is False).
+            ci : Whether to check for class imbalance (default is False).
 
-        Returns
-        -------
-        TextDataset
-            The fitted TextDataset object.
+        Returns:
+            TextDataset: The fitted TextDataset object.
         """
         from sklearn.preprocessing import LabelEncoder
 
         dataframe = self.dataframe.copy()
-        
+
         stratify = None
 
         if target:
@@ -282,101 +208,32 @@ class TextDataset:
 
     @property
     def feature(self):
-        """
-        Returns the feature column name.
-
-        Returns
-        -------
-        str
-            The feature column name.
-        """
         return self.__feature
 
     @property
     def target(self):
-        """
-        Returns the target column name.
-
-        Returns
-        -------
-        str
-            The target column name.
-        """
         return self.__target
 
     @property
     def dataframe(self):
-        """
-        Returns the original dataframe.
-
-        Returns
-        -------
-        pd.DataFrame
-            The original dataframe.
-        """
         return self.__dataframe
 
     @property
     def train(self):
-        """
-        Returns the training data.
-
-        Returns
-        -------
-        np.ndarray
-            The training data.
-        """
         return self.__train
 
     @property
     def test(self):
-        """
-        Returns the testing data.
-
-        Returns
-        -------
-        np.ndarray
-            The testing data.
-        """
         return self.__test
 
     @property
     def pipeline(self):
-        """
-        Returns the preprocessing pipeline.
-
-        Returns
-        -------
-        sklearn.pipeline.Pipeline
-            The preprocessing pipeline.
-        """
         return self.__pipeline
 
     @property
     def vectorizer(self):
-        """
-        Returns the vectorizer used in the pipeline.
-
-        Returns
-        -------
-        sklearn.feature_extraction.text.Vectorizer
-            The vectorizer used in the pipeline.
-        """
         return self.__vectorizer
 
     @property
     def label_encoder(self):
-        """
-        Returns the label encoder used for target labels.
-
-        Returns
-        -------
-        sklearn.preprocessing.LabelEncoder
-            The label encoder used for target labels.
-
-        Raises
-        ------
-        ValueError
-            If the label encoder is not found.
-        """
         return self.__label_encoder

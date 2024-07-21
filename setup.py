@@ -20,9 +20,7 @@ setup(
     author="nsandarma",
     author_email="nsandarma@gmail.com",
     license="MIT",
-    packages=find_packages(
-        exclude=["test", "dataset_ex", "env", "images", "examples"]
-    ),
+    packages=find_packages(exclude=["test", "dataset_ex", "env", "images", "examples"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

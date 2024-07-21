@@ -12,4 +12,5 @@ mknn.py
 test**
 /env
 .env
+site/
 
