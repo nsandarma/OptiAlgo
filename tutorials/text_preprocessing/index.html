@@ -9,22 +9,22 @@
       
       
       
-        <link rel="prev" href="../regression/">
+        <link rel="prev" href="../model/">
       
       
-        <link rel="next" href="../../dataset/">
+        <link rel="next" href="../text_classification/">
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+      <link rel="icon" href="../../logo_optialgo.svg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.30">
     
     
       
-        <title>Text preprocessing - optialgo docs</title>
+        <title>Text Preprocessing - optialgo docs v1.0.3</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.76a95c52.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -69,13 +69,18 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="lime">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="teal">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#text-preprocessing" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -89,10 +94,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="optialgo docs" class="md-header__button md-logo" aria-label="optialgo docs" data-md-component="logo">
+    <a href="../.." title="optialgo docs v1.0.3" class="md-header__button md-logo" aria-label="optialgo docs v1.0.3" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../../logo_optialgo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -103,13 +107,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            optialgo docs
+            optialgo docs v1.0.3
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Text preprocessing
+              Text Preprocessing
             
           </span>
         </div>
@@ -122,7 +126,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
@@ -132,7 +136,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
@@ -191,7 +195,7 @@
         <a href="https://github.com/nsandarma/optialgo" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -226,20 +230,19 @@
 
 <nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="optialgo docs" class="md-nav__button md-logo" aria-label="optialgo docs" data-md-component="logo">
+    <a href="../.." title="optialgo docs v1.0.3" class="md-nav__button md-logo" aria-label="optialgo docs v1.0.3" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../../logo_optialgo.svg" alt="logo">
 
     </a>
-    optialgo docs
+    optialgo docs v1.0.3
   </label>
   
     <div class="md-nav__source">
       <a href="https://github.com/nsandarma/optialgo" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -330,8 +333,6 @@
       
         
       
-        
-      
     
     
       
@@ -390,32 +391,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../classification/" class="md-nav__link">
+      <a href="../model/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Classification
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../regression/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Regression
+    Model
   </span>
   
 
@@ -438,16 +418,228 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Text Preprocessing
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Text preprocessing
+    Text Preprocessing
   </span>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#text-cleaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text Cleaning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Text Cleaning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remove-punctuation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remove Punctuation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-digits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remove Digits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remove URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-chars-non-latin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remove chars-non-latin
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-emoji" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remove Emoji
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text-manipulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text Manipulation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Text Manipulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#word-tokenize" class="md-nav__link">
+    <span class="md-ellipsis">
+      Word Tokenize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-to-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      Token To String
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#word-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Word Normalization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stopwords-removal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stopwords Removal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lemmatization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lemmatization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stemming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stemming
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tokenizer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tokenizer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#count-words" class="md-nav__link">
+    <span class="md-ellipsis">
+      Count Words
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texts-to-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Texts to Sequences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texts-to-pad-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Texts to Pad Sequences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequencespad-to-texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequences/Pad to Texts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -461,11 +653,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../text_classification" class="md-nav__link">
+      <a href="../text_classification/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    None
+    Text Classification
   </span>
   
 
@@ -1032,9 +1224,150 @@
   
 
 
-  <h1>Text preprocessing</h1>
-
-
+<h1 id="text-preprocessing">Text Preprocessing</h1>
+<p>The <code class="language-python highlight"><span class="n">text_preprocessing</span></code> module can help you perform text cleaning &amp; manipulation quickly and efficiently 🫠.</p>
+<h2 id="text-cleaning">Text Cleaning</h2>
+<p>You can clean text easily, just use the <code class="language-python highlight"><span class="n">text_clean</span></code> function.</p>
+<p><strong>Note :</strong> for the arguments in function <code class="language-python highlight"><span class="n">text_clean</span></code>, see <a href="https://nsandarma.github.io/OptiAlgo/utils/text_preprocessing/#optialgo.text_clean">text_clean</a>
+<div class="language-python highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">optialgo.text_preprocessing</span> <span class="kn">import</span> <span class="n">text_clean</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I told you not to feed that dog!&quot;</span><span class="p">,</span><span class="s2">&quot;There are 25 students in my math class this semester.&quot;</span><span class="p">,</span>
+<span class="s2">&quot;For more information about the project, please visit https://github.com/nsandarma/OptiAlgo&quot;</span><span class="p">,</span><span class="s2">&quot;My favorite Japanese word is &#39;ありがとう&#39; which means &#39;thank you&#39;.&quot;</span><span class="p">,</span><span class="s2">&quot;I&#39;m so excited for the weekend! 😄&quot;</span>
+<span class="p">]</span>
+<span class="n">dataset_clean</span> <span class="o">=</span> <span class="n">text_clean</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span> <span class="c1"># if returns is tokens, set parameters `return_token` is `True`</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;i told you not to feed that dog &#39;</span><span class="p">,</span> <span class="s1">&#39;there are  students in my math class this semester &#39;</span><span class="p">,</span> <span class="s1">&#39;for more information about the project  please visit &#39;</span><span class="p">,</span> <span class="s1">&#39;my favorite japanese word is    which means  thank you  &#39;</span><span class="p">,</span> <span class="s1">&#39;i m so excited for the weekend  &#39;</span><span class="p">]</span>
+</code></pre></div></p>
+<h3 id="remove-punctuation">Remove Punctuation</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">optialgo.text_preprocessing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I told you not to feed that dog!&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remove_punctuation</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;I told you not to feed that dog &#39;</span><span class="p">]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_remove_punctuation</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data</p>
+<h3 id="remove-digits">Remove Digits</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;There are 25 students in my math class this semester.&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remove_digits</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;There are  students in my math class this semester.&#39;</span><span class="p">]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_remove_digits</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data</p>
+<h3 id="remove-url">Remove URL</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;For more information about the project, please visit https://github.com/nsandarma/OptiAlgo&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remove_url</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;For more information about the project, please visit &#39;</span><span class="p">]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_remove_url</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data</p>
+<h3 id="remove-chars-non-latin">Remove chars-non-latin</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;My favorite Japanese word is &#39;ありがとう&#39; which means &#39;thank you&#39;.&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remove_non_latin</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s2">&quot;My favorite Japanese word is &#39;&#39; which means &#39;thank you&#39;.&quot;</span><span class="p">]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_remove_non_latin</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data</p>
+<h3 id="remove-emoji">Remove Emoji</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;I&#39;m so excited for the weekend! 😄&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remove_emoji</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s2">&quot;I&#39;m so excited for the weekend! &quot;</span><span class="p">]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_remove_emoji</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data</p>
+<h2 id="text-manipulation">Text Manipulation</h2>
+<p>After cleaning the text, you can manipulate the text by using the <code class="language-python highlight"><span class="n">text_manipulation</span></code> function 🥶 .</p>
+<p>see : <a href="https://nsandarma.github.io/OptiAlgo/utils/text_preprocessing/#optialgo.text_manipulation">text_manipulation</a>
+<div class="language-python highlight"><pre><span></span><code><span class="c1"># before performing `text_manipulation` the data must be tokenized first</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">text_manipulation</span><span class="p">(</span><span class="n">tokens</span><span class="o">=</span><span class="n">word_tokenize</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">),</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">))</span> <span class="c1"># lang : [&quot;indonesian&quot;,&quot;english&quot;]</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;i tell you not to fee that dog&#39;</span><span class="p">,</span> <span class="s1">&#39;there be student in my math class this semester&#39;</span><span class="p">,</span> <span class="s1">&#39;for more information about the project please visit&#39;</span><span class="p">,</span> <span class="s1">&#39;my favorite japanese word be which mean thank you&#39;</span><span class="p">,</span> <span class="s1">&#39;i m so excite for the weekend&#39;</span><span class="p">]</span>
+</code></pre></div></p>
+<h3 id="word-tokenize">Word Tokenize</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="n">tokens</span> <span class="o">=</span> <span class="n">word_tokenize</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;told&#39;</span><span class="p">,</span> <span class="s1">&#39;you&#39;</span><span class="p">,</span> <span class="s1">&#39;not&#39;</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">,</span> <span class="s1">&#39;that&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;there&#39;</span><span class="p">,</span> <span class="s1">&#39;are&#39;</span><span class="p">,</span> <span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="s1">&#39;my&#39;</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;this&#39;</span><span class="p">,</span> <span class="s1">&#39;semester&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;for&#39;</span><span class="p">,</span> <span class="s1">&#39;more&#39;</span><span class="p">,</span> <span class="s1">&#39;information&#39;</span><span class="p">,</span> <span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;please&#39;</span><span class="p">,</span> <span class="s1">&#39;visit&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;my&#39;</span><span class="p">,</span> <span class="s1">&#39;favorite&#39;</span><span class="p">,</span> <span class="s1">&#39;japanese&#39;</span><span class="p">,</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">,</span> <span class="s1">&#39;which&#39;</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">,</span> <span class="s1">&#39;thank&#39;</span><span class="p">,</span> <span class="s1">&#39;you&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">,</span> <span class="s1">&#39;excited&#39;</span><span class="p">,</span> <span class="s1">&#39;for&#39;</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">,</span> <span class="s1">&#39;weekend&#39;</span><span class="p">)]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_word_tokenize</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data <em>or</em> <code class="language-python highlight"><span class="n">f_regex_word_tokenize</span></code> with regex.</p>
+<h3 id="token-to-string">Token To String</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">token_to_str</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;i told you not to feed that dog&#39;</span><span class="p">,</span> <span class="s1">&#39;there are students in my math class this semester&#39;</span><span class="p">,</span> <span class="s1">&#39;for more information about the project please visit&#39;</span><span class="p">,</span> <span class="s1">&#39;my favorite japanese word is which means thank you&#39;</span><span class="p">,</span> <span class="s1">&#39;i m so excited for the weekend&#39;</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="word-normalization">Word Normalization</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="n">norm_words</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dog&quot;</span><span class="p">:</span><span class="s2">&quot;cat&quot;</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">normalize</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="n">norm_words</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;told&#39;</span><span class="p">,</span> <span class="s1">&#39;you&#39;</span><span class="p">,</span> <span class="s1">&#39;not&#39;</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">,</span> <span class="s1">&#39;that&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;there&#39;</span><span class="p">,</span> <span class="s1">&#39;are&#39;</span><span class="p">,</span> <span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="s1">&#39;my&#39;</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;this&#39;</span><span class="p">,</span> <span class="s1">&#39;semester&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;for&#39;</span><span class="p">,</span> <span class="s1">&#39;more&#39;</span><span class="p">,</span> <span class="s1">&#39;information&#39;</span><span class="p">,</span> <span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;please&#39;</span><span class="p">,</span> <span class="s1">&#39;visit&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;my&#39;</span><span class="p">,</span> <span class="s1">&#39;favorite&#39;</span><span class="p">,</span> <span class="s1">&#39;japanese&#39;</span><span class="p">,</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">,</span> <span class="s1">&#39;which&#39;</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">,</span> <span class="s1">&#39;thank&#39;</span><span class="p">,</span> <span class="s1">&#39;you&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">,</span> <span class="s1">&#39;excited&#39;</span><span class="p">,</span> <span class="s1">&#39;for&#39;</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">,</span> <span class="s1">&#39;weekend&#39;</span><span class="p">)]</span>
+</code></pre></div>
+<strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_word_normalize</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data</p>
+<h3 id="stopwords-removal">Stopwords Removal</h3>
+<p><div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">remove_stopwords</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[(</span><span class="s1">&#39;told&#39;</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;semester&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;information&#39;</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;please&#39;</span><span class="p">,</span> <span class="s1">&#39;visit&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;favorite&#39;</span><span class="p">,</span> <span class="s1">&#39;japanese&#39;</span><span class="p">,</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">,</span> <span class="s1">&#39;thank&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;excited&#39;</span><span class="p">,</span> <span class="s1">&#39;weekend&#39;</span><span class="p">)]</span>
+</code></pre></div>
+<strong>You can also add additional stopwords :</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span class="n">additional_st</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dog&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remove_stopwords</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span><span class="n">additional</span><span class="o">=</span><span class="n">additional_st</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[(</span><span class="s1">&#39;told&#39;</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;semester&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;information&#39;</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;please&#39;</span><span class="p">,</span> <span class="s1">&#39;visit&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;favorite&#39;</span><span class="p">,</span> <span class="s1">&#39;japanese&#39;</span><span class="p">,</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">,</span> <span class="s1">&#39;thank&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;excited&#39;</span><span class="p">,</span> <span class="s1">&#39;weekend&#39;</span><span class="p">)]</span>
+</code></pre></div>
+<h3 id="lemmatization">Lemmatization</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">lemmatization</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;i tell you not to fee that dog&#39;</span><span class="p">,</span> <span class="s1">&#39;there be student in my math class this semester&#39;</span><span class="p">,</span> <span class="s1">&#39;for more information about the project please visit&#39;</span><span class="p">,</span> <span class="s1">&#39;my favorite japanese word be which mean thank you&#39;</span><span class="p">,</span> <span class="s1">&#39;i m so excite for the weekend&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_lemmatization_en</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data, <code class="language-python highlight"><span class="n">f_lemmatization_idn</span></code> for Indonesian text</p>
+<h3 id="stemming">Stemming</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">stemming</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;i told you not to feed that dog&#39;</span><span class="p">,</span> <span class="s1">&#39;there are student in my math class thi semest&#39;</span><span class="p">,</span> <span class="s1">&#39;for more inform about the project pleas visit&#39;</span><span class="p">,</span> <span class="s1">&#39;my favorit japanes word is which mean thank you&#39;</span><span class="p">,</span> <span class="s1">&#39;i m so excit for the weekend&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Note:</strong> 
+use <code class="language-python highlight"><span class="n">f_stemming_en</span></code> if the data is <code class="language-python highlight"><span class="nb">str</span></code> / single data, <code class="language-python highlight"><span class="n">f_stemming_idn</span></code> for Indonesian text</p>
+<h2 id="tokenizer">Tokenizer</h2>
+<p>If you need a tokenizer to prepare for deep learning, optialgo already provides it 🫵</p>
+<p>see : <a href="https://nsandarma.github.io/OptiAlgo/utils/text_preprocessing/?h=tokenizer#optialgo.Tokenizer">tokenizer</a>
+<div class="language-python highlight"><pre><span></span><code><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">word_index</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">{</span><span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;my&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;for&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;you&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;thank&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;which&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;about&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;japanese&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s1">&#39;excited&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;favorite&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;visit&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;please&#39;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s1">&#39;more&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;information&#39;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span> <span class="s1">&#39;told&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s1">&#39;semester&#39;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span> <span class="s1">&#39;this&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="mi">26</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span> <span class="s1">&#39;students&#39;</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span> <span class="s1">&#39;are&#39;</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span> <span class="s1">&#39;there&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span> <span class="s1">&#39;that&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span> <span class="s1">&#39;not&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span> <span class="s1">&#39;weekend&#39;</span><span class="p">:</span> <span class="mi">36</span><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="count-words">Count Words</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">count_words</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;you&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;my&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;for&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;the&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;told&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;not&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;that&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;there&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;are&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;students&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;math&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;this&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;semester&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;more&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;information&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;about&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;please&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;visit&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;favorite&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;japanese&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;word&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;is&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;which&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;thank&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;excited&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;weekend&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+</code></pre></div>
+<h3 id="texts-to-sequences">Texts to Sequences</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="n">sequences</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">texts_to_sequences</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">31</span><span class="p">],</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">23</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">36</span><span class="p">]]</span>
+</code></pre></div>
+<h3 id="texts-to-pad-sequences">Texts to Pad Sequences</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="n">sequences</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">texts_to_pad_sequences</span><span class="p">(</span><span class="n">dataset_clean</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[[</span> <span class="mi">0</span>  <span class="mi">1</span> <span class="mi">22</span>  <span class="mi">5</span> <span class="mi">35</span> <span class="mi">34</span> <span class="mi">33</span> <span class="mi">32</span> <span class="mi">31</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">30</span> <span class="mi">29</span> <span class="mi">28</span> <span class="mi">27</span>  <span class="mi">2</span> <span class="mi">26</span> <span class="mi">25</span> <span class="mi">24</span> <span class="mi">23</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mi">0</span>  <span class="mi">3</span> <span class="mi">20</span> <span class="mi">21</span> <span class="mi">11</span>  <span class="mi">4</span> <span class="mi">18</span> <span class="mi">17</span> <span class="mi">16</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mi">2</span> <span class="mi">15</span> <span class="mi">13</span> <span class="mi">12</span> <span class="mi">19</span> <span class="mi">10</span>  <span class="mi">9</span>  <span class="mi">8</span>  <span class="mi">5</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">7</span>  <span class="mi">6</span> <span class="mi">14</span>  <span class="mi">3</span>  <span class="mi">4</span> <span class="mi">36</span><span class="p">]]</span>
+</code></pre></div>
+<h3 id="sequencespad-to-texts">Sequences/Pad to Texts</h3>
+<div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">sequences_to_texts</span><span class="p">(</span><span class="n">sequences</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;i told you not to feed that dog&#39;</span><span class="p">,</span> <span class="s1">&#39;there are students in my math class this semester&#39;</span><span class="p">,</span> <span class="s1">&#39;for more information about the project please visit&#39;</span><span class="p">,</span> <span class="s1">&#39;my favorite japanese word is which means thank you&#39;</span><span class="p">,</span> <span class="s1">&#39;i m so excited for the weekend&#39;</span><span class="p">]</span>
+</code></pre></div>
 
 
 
@@ -1070,7 +1403,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../regression/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Regression">
+          <a href="../model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Model">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -1080,20 +1413,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Regression
+                Model
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../dataset/" class="md-footer__link md-footer__link--next" aria-label="Next: Dataset">
+          <a href="../text_classification/" class="md-footer__link md-footer__link--next" aria-label="Next: Text Classification">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Dataset
+                Text Classification
               </div>
             </div>
             <div class="md-footer__button md-icon">

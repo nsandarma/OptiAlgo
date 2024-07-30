@@ -12,19 +12,19 @@
         <link rel="prev" href="../make_dataset/">
       
       
-        <link rel="next" href="../regression/">
+        <link rel="next" href="../text_preprocessing/">
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+      <link rel="icon" href="../../logo_optialgo.svg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.30">
     
     
       
-        <title>Classification - optialgo docs</title>
+        <title>Model - optialgo docs v1.0.3</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.76a95c52.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -69,13 +69,18 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="lime">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="teal">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#model" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -89,10 +94,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="optialgo docs" class="md-header__button md-logo" aria-label="optialgo docs" data-md-component="logo">
+    <a href="../.." title="optialgo docs v1.0.3" class="md-header__button md-logo" aria-label="optialgo docs v1.0.3" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../../logo_optialgo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -103,13 +107,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            optialgo docs
+            optialgo docs v1.0.3
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Classification
+              Model
             
           </span>
         </div>
@@ -122,7 +126,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
@@ -132,7 +136,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
@@ -191,7 +195,7 @@
         <a href="https://github.com/nsandarma/optialgo" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -226,20 +230,19 @@
 
 <nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="optialgo docs" class="md-nav__button md-logo" aria-label="optialgo docs" data-md-component="logo">
+    <a href="../.." title="optialgo docs v1.0.3" class="md-nav__button md-logo" aria-label="optialgo docs v1.0.3" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../../logo_optialgo.svg" alt="logo">
 
     </a>
-    optialgo docs
+    optialgo docs v1.0.3
   </label>
   
     <div class="md-nav__source">
       <a href="https://github.com/nsandarma/optialgo" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -330,8 +333,6 @@
       
         
       
-        
-      
     
     
       
@@ -396,38 +397,94 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Model
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    Classification
+    Model
   </span>
   
 
       </a>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../regression/" class="md-nav__link">
         
-  
-  <span class="md-ellipsis">
-    Regression
-  </span>
-  
 
-      </a>
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#compare-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compare Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set Algorithm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-best-hyperparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find Best HyperParameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tuning-hyperparameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tuning HyperParameter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -444,7 +501,7 @@
         
   
   <span class="md-ellipsis">
-    Text preprocessing
+    Text Preprocessing
   </span>
   
 
@@ -461,11 +518,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../text_classification" class="md-nav__link">
+      <a href="../text_classification/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    None
+    Text Classification
   </span>
   
 
@@ -1016,7 +1073,7 @@
                   
 
   
-    <a href="https://github.com/nsandarma/optialgo/edit/master/docs/tutorials/classification.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/nsandarma/optialgo/edit/master/docs/tutorials/model.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -1025,16 +1082,91 @@
     
       
     
-    <a href="https://github.com/nsandarma/optialgo/raw/master/docs/tutorials/classification.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/nsandarma/optialgo/raw/master/docs/tutorials/model.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
   
 
 
-  <h1>Classification</h1>
+<h1 id="model"><strong>Model</strong></h1>
+<p>You can perform classification very easily by simply entering a pre-made <code class="language-python highlight"><span class="n">dataset</span></code>🫨. </p>
+<div class="language-python highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">optialgo</span> <span class="kn">import</span> <span class="n">Classification</span>
 
+<span class="n">clf</span> <span class="o">=</span> <span class="n">Classification</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">Classificaton</span> <span class="n">Object</span><span class="o">&gt;</span>
+</code></pre></div>
+<h2 id="compare-models">Compare Models</h2>
+<p><strong><em>Notes</em></strong> :
+<div class="language-text highlight"><pre><span></span><code>output : 
+- table : only displays the output table
+- dataframe : returns the dataframe 
+- only_accuracy : only returns the accuracy score
 
+train_val : using train test split or using cross validation 
+verbose : displaying progress or not
+</code></pre></div></p>
+<div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">compare_model</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;dataframe&quot;</span><span class="p">,</span><span class="n">train_val</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code>                     <span class="n">accuracy_train</span>  <span class="n">accuracy_val</span>  <span class="n">precision_train</span>  <span class="n">precision_val</span>  <span class="n">recall_train</span>  <span class="n">recall_val</span>  <span class="n">f1_train</span>    <span class="n">f1_val</span>
+<span class="n">Naive</span> <span class="n">Bayes</span>                 <span class="mf">0.58750</span>         <span class="mf">0.500</span>         <span class="mf">0.595715</span>       <span class="mf">0.586250</span>       <span class="mf">0.58750</span>       <span class="mf">0.500</span>  <span class="mf">0.539619</span>  <span class="mf">0.496820</span>
+<span class="n">K</span><span class="o">-</span><span class="n">Nearest</span> <span class="n">Neighbor</span>          <span class="mf">0.79375</span>         <span class="mf">0.675</span>         <span class="mf">0.802155</span>       <span class="mf">0.660000</span>       <span class="mf">0.79375</span>       <span class="mf">0.675</span>  <span class="mf">0.790456</span>  <span class="mf">0.660161</span>
+<span class="n">SVM</span>                         <span class="mf">0.70000</span>         <span class="mf">0.700</span>         <span class="mf">0.547344</span>       <span class="mf">0.530451</span>       <span class="mf">0.70000</span>       <span class="mf">0.700</span>  <span class="mf">0.605803</span>  <span class="mf">0.598718</span>
+<span class="n">Logistic</span> <span class="n">Regression</span>         <span class="mf">0.98125</span>         <span class="mf">0.975</span>         <span class="mf">0.981663</span>       <span class="mf">0.976316</span>       <span class="mf">0.98125</span>       <span class="mf">0.975</span>  <span class="mf">0.981207</span>  <span class="mf">0.974743</span>
+<span class="n">Random</span> <span class="n">Forest</span>               <span class="mf">1.00000</span>         <span class="mf">1.000</span>         <span class="mf">1.000000</span>       <span class="mf">1.000000</span>       <span class="mf">1.00000</span>       <span class="mf">1.000</span>  <span class="mf">1.000000</span>  <span class="mf">1.000000</span>
+<span class="n">Decision</span> <span class="n">Tree</span>               <span class="mf">1.00000</span>         <span class="mf">0.975</span>         <span class="mf">1.000000</span>       <span class="mf">0.976316</span>       <span class="mf">1.00000</span>       <span class="mf">0.975</span>  <span class="mf">1.000000</span>  <span class="mf">0.974743</span>
+<span class="n">XGBoost</span>                     <span class="mf">1.00000</span>         <span class="mf">0.975</span>         <span class="mf">1.000000</span>       <span class="mf">0.981250</span>       <span class="mf">1.00000</span>       <span class="mf">0.975</span>  <span class="mf">1.000000</span>  <span class="mf">0.976190</span>
+<span class="n">Gradient</span> <span class="n">Boosting</span>           <span class="mf">1.00000</span>         <span class="mf">0.950</span>         <span class="mf">1.000000</span>       <span class="mf">0.951316</span>       <span class="mf">1.00000</span>       <span class="mf">0.950</span>  <span class="mf">1.000000</span>  <span class="mf">0.948949</span>
+</code></pre></div>
+<h2 id="set-algorithm">Set Algorithm</h2>
+<p>Having found the <code class="language-python highlight"><span class="n">compare_model</span></code> score, you can now determine what algorithm to use 😉.
+<div class="language-text highlight"><pre><span></span><code>actually, you can specify the algorithm to be used at the beginning.
+clf = Classification(dataset=dataset,algorithm=&quot;Logistic Regression&quot;)
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="n">clf</span><span class="o">.</span><span class="n">set_model</span><span class="p">(</span><span class="s2">&quot;Logistic Regression&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="find-best-hyperparameters">Find Best HyperParameters</h2>
+<p><div class="language-python highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">get_params_from_model</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;class_weight&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;dual&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;fit_intercept&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;intercept_scaling&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;l1_ratio&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;max_iter&#39;</span><span class="p">:</span> <span class="mi">4000</span><span class="p">,</span> <span class="s1">&#39;multi_class&#39;</span><span class="p">:</span> <span class="s1">&#39;deprecated&#39;</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;penalty&#39;</span><span class="p">:</span> <span class="s1">&#39;l2&#39;</span><span class="p">,</span> <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;solver&#39;</span><span class="p">:</span> <span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="s1">&#39;tol&#39;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;warm_start&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</code></pre></div>
+for an example of this case, see <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">LogisticRegression</a></p>
+<p>you can change the parameter above, with the following estimation :</p>
+<div class="language-python highlight"><pre><span></span><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">:[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.2</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">2.0</span><span class="p">],</span><span class="s2">&quot;solver&quot;</span><span class="p">:[</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="s2">&quot;liblinear&quot;</span><span class="p">,</span> <span class="s2">&quot;newton-cg&quot;</span><span class="p">,</span> <span class="s2">&quot;newton-cholesky&quot;</span><span class="p">,</span> <span class="s2">&quot;sag&quot;</span><span class="p">,</span> <span class="s2">&quot;saga&quot;</span><span class="p">]}</span>
+<span class="n">best_score</span><span class="p">,</span><span class="n">best_params</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">find_best_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;best_score : </span><span class="si">{</span><span class="n">best_score</span><span class="si">}</span><span class="s2"> | best_params : </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="n">best_score</span> <span class="p">:</span> <span class="mf">0.9625</span> <span class="o">|</span> <span class="n">best_params</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s1">&#39;solver&#39;</span><span class="p">:</span> <span class="s1">&#39;lbfgs&#39;</span><span class="p">}</span>
+</code></pre></div>
+<h2 id="tuning-hyperparameter">Tuning HyperParameter</h2>
+<p>after finding the best hyperparameter, you can tune the hyperparameter.
+<div class="language-python highlight"><pre><span></span><code><span class="n">clf</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">best_params</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="prediction">Prediction</h2>
+<p>After determining the algorithm, you can make predictions for the actual test data 🤫.
+<div class="language-python highlight"><pre><span></span><code><span class="n">new_data</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">22</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;HIGH&quot;</span><span class="p">,</span><span class="s2">&quot;HIGH&quot;</span><span class="p">,</span><span class="mf">23.1</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">new_data</span><span class="p">))</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="p">[</span><span class="s1">&#39;DrugY&#39;</span><span class="p">]</span>
+</code></pre></div></p>
+<p><strong>Note:</strong>
+<em>For the regression case, you can simply call the <code class="language-python highlight"><span class="n">Regression</span></code> class, but first make sure <code class="language-python highlight"><span class="n">t</span></code> in your dataset = <code class="language-python highlight"><span class="n">regression</span></code>.</em></p>
+<div class="language-python highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">optialgo</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span><span class="n">Regression</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;dataset_ex/Housing.csv&quot;</span><span class="p">)</span> <span class="c1"># Regression Dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1"># [&#39;area&#39;, &#39;bedrooms&#39;, &#39;bathrooms&#39;, &#39;stories&#39;, &#39;mainroad&#39;, &#39;guestroom&#39;, &#39;basement&#39;, &#39;hotwaterheating&#39;, &#39;airconditioning&#39;, &#39;parking&#39;, &#39;prefarea&#39;, &#39;furnishingstatus&#39;]</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;price&quot;</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span><span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">)</span>
+
+<span class="n">reg</span> <span class="o">=</span> <span class="n">Regression</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">Regression</span> <span class="n">Object</span><span class="o">&gt;</span>
+</code></pre></div>
 
 
 
@@ -1087,13 +1219,13 @@
         
         
           
-          <a href="../regression/" class="md-footer__link md-footer__link--next" aria-label="Next: Regression">
+          <a href="../text_preprocessing/" class="md-footer__link md-footer__link--next" aria-label="Next: Text Preprocessing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Regression
+                Text Preprocessing
               </div>
             </div>
             <div class="md-footer__button md-icon">
