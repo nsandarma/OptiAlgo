@@ -1,3 +1,20 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="/docs/logo_optialgo.svg">
+  <img alt="optialgo" src="https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/demo.gif" width="50%" height="50%">
+</picture>
+
+
+<h3>
+
+[Documentation](https://nsandarma.github.io/OptiAlgo/)
+
+</h3>
+</div>
+
+---
+
 # OptiAlgo
 Solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual.
 
