@@ -1,10 +1,11 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: light)" srcset="/docs/logo_optialgo.svg">
-  <img alt="optialgo" src="https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/demo.gif" width="50%" height="50%">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/logo_optialgo.svg">
+  <img alt="optialgo" src="https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/logo_optialgo.svg" width="50%" height="50%">
 </picture>
 
+Solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual.
 
 <h3>
 
@@ -14,9 +15,6 @@
 </div>
 
 ---
-
-# OptiAlgo
-Solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik untuk data mereka tanpa harus melakukan pengujian yang rumit dan memakan waktu secara manual.
 
 ![image](https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/demo.gif)
 
@@ -50,7 +48,7 @@ pip install git+https://github.com/nsandarma/OptiAlgo.git
 ```
 
 ## Cara Menggunakan
-```py
+```python
 import pandas as pd
 from optialgo import Dataset, Classification
 
@@ -59,7 +57,7 @@ features = ['Age','Sex','BP','Cholesterol',"Na_to_K"]
 target = 'Drug'
 
 dataset = Dataset(dataframe=df)
-dataset.fit(features=features,target=target)
+dataset.fit(features=features,target=target,t="classsification")
 
 clf = Classification()
 result = clf.compare_model(output='table',train_val=True)
