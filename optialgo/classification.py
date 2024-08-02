@@ -80,19 +80,16 @@ class Classification(Parent):
         If the dataset represents a binary classification problem,
         it adds the AUC metric to the classification metrics.
 
-        Parameters
-        ----------
-        dataset : Dataset
-            An instance of the Dataset class, which includes the data and its characteristics.
+        Args:
+            dataset : An instance of the Dataset class, which includes the data and its characteristics.
+            algorithm : The algorithm to be used for classification. Default is None.
 
-        algorithm : str, optional
-            The algorithm to be used for classification. Default is None.
-
-        Example
-        -------
-        >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
-        >>> dataset.fit(features=features,target=target)
-        >>> classifier = Classifier(dataset, algorithm='random_forest')
+        Examples:
+        ```python
+        dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        dataset.fit(features=features,target=target)
+        classifier = Classifier(dataset, algorithm='random_forest')
+        ```
         """
         if dataset.class_type == "binary":
             Classification.METRICS["AUC"] = roc_auc_score
@@ -129,7 +126,7 @@ class Classification(Parent):
         """
         Calculates the score based on the predicted and true target values.
 
-        Parameters:
+        Args:
             y_true (array-like): The true target values.
             y_pred (array-like): The predicted target values.
             metric (str, optional): The scoring metric to use. Default is 'accuracy'.
@@ -160,7 +157,7 @@ class Classification(Parent):
         """
         Generates a report containing various metric scores and classification report between true and predicted target values.
 
-        Parameters:
+        Args:
             y_true (array-like): The true target values.
             y_pred (array-like): The predicted target values.
 
@@ -195,40 +192,32 @@ class Classification(Parent):
         validation sets or using cross-validation, and compiles the performance metrics. The results
         can be output in different formats, including dictionary, pandas DataFrame, or a formatted table.
 
-        Parameters
-        ----------
-        output : str, optional
-            The format of the output. It can be:
-            - "dict": Returns the results as a dictionary (default).
-            - "dataframe": Returns the results as a pandas DataFrame.
-            - "table": Prints the results as a formatted table.
-            - "only_score": Returns only the accuracy scores in a simplified dictionary.
+        Args:
+            output :
+                The format of the output. It can be:
+                - "dict": Returns the results as a dictionary (default).
+                - "dataframe": Returns the results as a pandas DataFrame.
+                - "table": Prints the results as a formatted table.
+                - "only_score": Returns only the accuracy scores in a simplified dictionary.
 
-        train_val : bool, optional
-            If True, the function evaluates the models using a train-validation split.
+        train_val : If True, the function evaluates the models using a train-validation split.
             If False, the function uses cross-validation. Default is True.
 
-        Returns
-        -------
-        dict or pd.DataFrame or None
-            The function returns results based on the `output` parameter:
-            - If `output` is "dict", it returns a dictionary of the results.
-            - If `output` is "dataframe", it returns a pandas DataFrame of the results.
-            - If `output` is "table", it prints the results as a formatted table.
-            - If `output` is "only_score", it returns a dictionary with only the accuracy scores.
+        Returns:
+            dict or pd.DataFrame or None
 
-        Raises
-        ------
-        ValueError
-            If the task type is not "classification" or "regression".
+        Raises:
+            ValueError : If the task type is not "classification" or "regression".
 
-        Example
-        -------
-        >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
-        >>> dataset.fit(features=features,target=target)
-        >>> classifier = Classifier(dataset, algorithm='random_forest')
-        >>> results = classifier.compare_model(output='dataframe', train_val=True)
-        >>> print(results)
+        Examples:
+        ```python
+        dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        dataset.fit(features=features,target=target,t="classification")
+        classifier = Classification(dataset, algorithm='random_forest')
+        results = classifier.compare_model(output='dataframe', train_val=True)
+        print(results)
+
+        ```
         """
         result = {}
         X_train, X_test, y_train, y_test = self.dataset.get_x_y()

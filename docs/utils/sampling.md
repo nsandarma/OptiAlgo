@@ -1,0 +1,2 @@
+# Sampling
+::: optialgo.sampling

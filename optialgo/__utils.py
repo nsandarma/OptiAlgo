@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+from typing import Literal
+
 
 # Feature Selection (Filter Methods)
 def feature_select_information_gain(
@@ -13,41 +15,29 @@ def feature_select_information_gain(
     It supports both classification and regression tasks, and selects the most important features
     according to the specified number of features to select.
 
-    Parameters
-    ----------
-    X : pd.DataFrame
-        The input dataframe containing the feature columns.
+    Args:
+        X : The input dataframe containing the feature columns.
+        y : The target variable column.
+        n_features : The number of top features to select based on information gain.
+        t : The type of task. It can be either "classification" or "regression".
 
-    y : pd.Series
-        The target variable column.
+    Returns:
+        list: A list of the selected feature names ranked by their importance.
 
-    n_features : int
-        The number of top features to select based on information gain.
+    Raises:
+        ValueError: If `t` is not "classification" or "regression".
 
-    t : str
-        The type of task. It can be either "classification" or "regression".
-
-    Returns
-    -------
-    list
-        A list of the selected feature names ranked by their importance.
-
-    Raises
-    ------
-    ValueError
-        If `t` is not "classification" or "regression".
-
-    Example
-    -------
-    >>> import pandas as pd
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.model_selection import train_test_split
-    >>> data = load_iris()
-    >>> X = pd.DataFrame(data.data, columns=data.feature_names)
-    >>> y = pd.Series(data.target)
-    >>> selected_features = feature_select_information_gain(X, y, n_features=2, t='classification')
-    >>> print(selected_features)
-    ['petal length (cm)', 'petal width (cm)']
+    Examples:
+        >>> import pandas as pd
+        >>> from sklearn.datasets import load_iris
+        >>> from optialgo import feature_select_information_gain
+        >>> from sklearn.model_selection import train_test_split
+        >>> data = load_iris()
+        >>> X = pd.DataFrame(data.data, columns=data.feature_names)
+        >>> y = pd.Series(data.target)
+        >>> selected_features = feature_select_information_gain(X, y, n_features=2, t='classification')
+        >>> print(selected_features)
+        ['petal length (cm)', 'petal width (cm)']
     """
     from sklearn.feature_selection import mutual_info_classif, mutual_info_regression
 
@@ -73,33 +63,27 @@ def feature_select_chi_square(
     This function evaluates the importance of categorical features in a dataset using the chi-square
     statistical test. It selects the most important features according to the specified number of features to select.
 
-    Parameters
-    ----------
-    X : pd.DataFrame
-        The input dataframe containing the feature columns.
+    Args:
+        X : The input dataframe containing the feature columns.
+        y : The target variable column.
+        n_features : The number of top features to select based on the chi-square statistic.
 
-    y : pd.Series
-        The target variable column.
+    Returns:
+        list: A list of the selected feature names ranked by their chi-square scores.
 
-    n_features : int
-        The number of top features to select based on the chi-square statistic.
-
-    Returns
-    -------
-    list
-        A list of the selected feature names ranked by their chi-square scores.
-
-    Example
-    -------
-    >>> import pandas as pd
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.model_selection import train_test_split
-    >>> data = load_iris()
-    >>> X = pd.DataFrame(data.data, columns=data.feature_names)
-    >>> y = pd.Series(data.target)
-    >>> selected_features = feature_select_chi_square(X, y, n_features=2)
-    >>> print(selected_features)
-    ['petal length (cm)', 'petal width (cm)']
+    Examples:
+    ```python
+    import pandas as pd
+    from sklearn.datasets import load_iris
+    from optialgo import feature_select_chi_square
+    from sklearn.model_selection import train_test_split
+    data = load_iris()
+    X = pd.DataFrame(data.data, columns=data.feature_names)
+    y = pd.Series(data.target)
+    selected_features = feature_select_chi_square(X, y, n_features=2)
+    print(selected_features)
+    # output : ['petal length (cm)', 'petal width (cm)']
+    ```
     """
     from sklearn.feature_selection import SelectKBest, chi2
 
@@ -116,32 +100,26 @@ def feature_select_anova(X: pd.DataFrame, y: pd.DataFrame, n_features: int):
     based on the ANOVA F-test. It uses the `SelectKBest` class with the `f_classif`
     scoring function to rank features by their importance.
 
-    Parameters
-    ----------
-    X : pd.DataFrame
-        The input dataframe containing feature values.
+    Args:
+        X : The input dataframe containing feature values.
+        y : The target values corresponding to the input features.
+        n_features : The number of top features to select.
 
-    y : pd.DataFrame
-        The target values corresponding to the input features.
+    Returns:
+        list : A list of the names of the selected features.
 
-    n_features : int
-        The number of top features to select.
-
-    Returns
-    -------
-    list
-        A list of the names of the selected features.
-
-    Example
-    -------
-    >>> from sklearn.datasets import load_iris
-    >>> import pandas as pd
-    >>> data = load_iris()
-    >>> X = pd.DataFrame(data.data, columns=data.feature_names)
-    >>> y = pd.DataFrame(data.target, columns=["target"])
-    >>> selected_features = feature_select_anova(X, y, n_features=2)
-    >>> print(selected_features)
-    ['petal length (cm)', 'petal width (cm)']
+    Examples:
+    ```python
+    from sklearn.datasets import load_iris
+    from optialgo import feature_select_anova
+    import pandas as pd
+    data = load_iris()
+    X = pd.DataFrame(data.data, columns=data.feature_names)
+    y = pd.DataFrame(data.target, columns=["target"])
+    selected_features = feature_select_anova(X, y, n_features=2)
+    print(selected_features)
+    # output : ['petal length (cm)', 'petal width (cm)']
+    ```
     """
     from sklearn.feature_selection import SelectKBest, f_classif
 
@@ -160,33 +138,26 @@ def feature_select_fisher_score(
     Fisher Score is a supervised feature selection method that evaluates the importance of a feature
     by measuring the discriminative power of each feature with respect to the target `y`.
 
-    Parameters
-    ----------
-    X : pd.DataFrame
-        The input dataframe containing feature values.
+    Args:
+        X : The input dataframe containing feature values.
+        y : The target values corresponding to the input features.
+        n_features : The number of top features to select.
 
-    y : pd.DataFrame
-        The target values corresponding to the input features.
+    Returns:
+        list: A list of the names of the selected features.
 
-    n_features : int
-        The number of top features to select.
-
-    Returns
-    -------
-    list
-        A list of the names of the selected features.
-
-    Example
-    -------
-    >>> from sklearn.datasets import load_iris
-    >>> import pandas as pd
-    >>> from skfeature.function.similarity_based import fisher_score
-    >>> data = load_iris()
-    >>> X = pd.DataFrame(data.data, columns=data.feature_names)
-    >>> y = pd.DataFrame(data.target, columns=["target"])
-    >>> selected_features = feature_select_fisher_score(X, y, n_features=2)
-    >>> print(selected_features)
-    ['petal width (cm)', 'petal length (cm)']
+    Examples
+    ```python
+    from sklearn.datasets import load_iris
+    from optialgo import feature_select_fisher_score
+    import pandas as pd
+    data = load_iris()
+    X = pd.DataFrame(data.data, columns=data.feature_names)
+    y = pd.DataFrame(data.target, columns=["target"])
+    selected_features = feature_select_fisher_score(X, y, n_features=2)
+    print(selected_features)
+    # output :['petal width (cm)', 'petal length (cm)']
+    ```
     """
     from skfeature.function.similarity_based.fisher_score import fisher_score
 
@@ -203,28 +174,24 @@ def feature_select_variance_threshold(X: pd.DataFrame, threshold: int) -> list:
     Features with a variance lower than the threshold will be removed, as they are less likely
     to be informative.
 
-    Parameters
-    ----------
-    X : pd.DataFrame
-        The input dataframe containing feature values.
+    Args:
+        X : The input dataframe containing feature values.
+        threshold : The variance threshold. Features with a variance lower than this value will be removed.
 
-    threshold : float
-        The variance threshold. Features with a variance lower than this value will be removed.
+    Returns:
+        list: A list of the names of the selected features that have a variance above the threshold.
 
-    Returns
-    -------
-    list
-        A list of the names of the selected features that have a variance above the threshold.
-
-    Example
-    -------
-    >>> from sklearn.datasets import load_iris
-    >>> import pandas as pd
-    >>> data = load_iris()
-    >>> X = pd.DataFrame(data.data, columns=data.feature_names)
-    >>> selected_features = feature_select_variance_threshold(X, threshold=0.5)
-    >>> print(selected_features)
-    ['petal length (cm)', 'petal width (cm)']
+    Examples:
+    ```python
+    from sklearn.datasets import load_iris
+    from optialgo import feature_select_variance_threshold
+    import pandas as pd
+    data = load_iris()
+    X = pd.DataFrame(data.data, columns=data.feature_names)
+    selected_features = feature_select_variance_threshold(X, threshold=0.5)
+    print(selected_features)
+    # output : ['petal length (cm)', 'petal width (cm)']
+    ```
     """
     from sklearn.feature_selection import VarianceThreshold
 
@@ -240,42 +207,33 @@ def feature_select_rfe(X: pd.DataFrame, y: pd.DataFrame, n_features: int, t: str
     This method selects the top `n_features` from the input dataframe `X` using Recursive Feature
     Elimination with a specified model type for either classification or regression tasks.
 
-    Parameters
-    ----------
-    X : pd.DataFrame
-        The input dataframe containing feature values.
+    Args:
+        X : The input dataframe containing feature values.
 
-    y : pd.DataFrame
-        The target values corresponding to the input features.
+        y : The target values corresponding to the input features.
 
-    n_features : int
-        The number of top features to select.
+        n_features : The number of top features to select.
 
-    t : str
-        The type of task: "classification" or "regression". Determines which model to use for RFE.
-        - If "classification", uses `RandomForestClassifier`.
-        - If "regression", uses `RandomForestRegressor`.
+        t : The type of task: "classification" or "regression". Determines which model to use for RFE.
 
-    Returns
-    -------
-    list
-        A list of the names of the selected features.
+    Returns:
+        list: A list of the names of the selected features.
 
-    Raises
-    ------
-    ValueError
-        If `t` is neither "classification" nor "regression".
+    Raises:
+        ValueError: If `t` is neither "classification" nor "regression".
 
-    Example
-    -------
-    >>> from sklearn.datasets import load_iris
-    >>> import pandas as pd
-    >>> data = load_iris()
-    >>> X = pd.DataFrame(data.data, columns=data.feature_names)
-    >>> y = pd.DataFrame(data.target, columns=["target"])
-    >>> selected_features = feature_select_rfe(X, y, n_features=2, t="classification")
-    >>> print(selected_features)
-    ['petal width (cm)', 'petal length (cm)']
+    Examples:
+    ```python
+    from sklearn.datasets import load_iris
+    from optialgo import feature_select_rfe
+    import pandas as pd
+    data = load_iris()
+    X = pd.DataFrame(data.data, columns=data.feature_names)
+    y = pd.DataFrame(data.target, columns=["target"])
+    selected_features = feature_select_rfe(X, y, n_features=2, t="classification")
+    print(selected_features)
+    # output : ['petal width (cm)', 'petal length (cm)']
+    ```
     """
     from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
     from sklearn.feature_selection import RFE
@@ -305,41 +263,33 @@ def feature_selection(
     classification or regression model based on the target variable type, and evaluates the model
     performance for each set of selected features.
 
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        The input dataframe containing features and the target variable.
+    Args:
+        dataframe : The input dataframe containing features and the target variable.
 
-    target : str
-        The name of the target variable column in the dataframe.
+        target : The name of the target variable column in the dataframe.
 
-    n_features : int
-        The number of top features to select using feature selection methods.
+        n_features : The number of top features to select using feature selection methods.
 
-    threshold : int, optional
-        The threshold for variance threshold feature selection. Default is 0.0.
+        threshold : The threshold for variance threshold feature selection. Default is 0.0.
 
-    features : list, optional
-        A list of feature names to consider for selection. If not provided, all columns
-        except the target column are used.
+        features : A list of feature names to consider for selection. If not provided, all columns except the target column are used.
 
-    Returns
-    -------
-    dict
-        A dictionary where keys are the names of feature selection methods and values are
-        the sets of selected features.
+    Returns:
+        dict : A dictionary where keys are the names of feature selection methods and values are the sets of selected features.
 
-    Example
-    -------
-    >>> df = pd.read_csv("data.csv")
-    >>> selected_features = feature_selection(dataframe=df, target="target", n_features=10)
-    >>> print(selected_features)
-    {
+    Examples:
+    ```python
+    import pandas as pd
+    from optialgo import feature_selection
+    selected_features = feature_selection(dataframe=df, target="target", n_features=10)
+    print(selected_features)
+    # output :{
         'all': ['feature1', 'feature2', ...],
         'f_mutual': ['feature1', 'feature3', ...],
         'f_anova': ['feature2', 'feature4', ...],
         ...
     }
+    ```
     """
     from .dataset import Dataset
     from . import Classification, Regression
@@ -397,51 +347,34 @@ def handling_missing_values(
     dictionary of imputers, drop columns with missing values exceeding a specified threshold, and impute the remaining
     missing values using median for numerical columns and most frequent value for categorical columns.
 
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        The input DataFrame containing missing values.
+    Args:
+    dataframe : The input DataFrame containing missing values.
+    imputation : A dictionary where keys are column names and values are imputer instances from sklearn.impute. If provided, these imputers will be used to fill missing values in the specified columns.
+    threshold : A float value between 0 and 1 that specifies the maximum allowable fraction of missing values in a column.  Columns with a fraction of missing values greater than or equal to this threshold will be dropped.
 
-    imputation : dict, optional
-        A dictionary where keys are column names and values are imputer instances from sklearn.impute. If provided,
-        these imputers will be used to fill missing values in the specified columns.
+    Returns:
+        pd.DataFrame: A DataFrame with missing values handled according to the specified parameters.
 
-    threshold : float, default=0.3
-        A float value between 0 and 1 that specifies the maximum allowable fraction of missing values in a column.
-        Columns with a fraction of missing values greater than or equal to this threshold will be dropped.
-
-    Returns
-    -------
-    pd.DataFrame
-        A DataFrame with missing values handled according to the specified parameters.
-
-    Raises
-    ------
-    ValueError
-        If the threshold is greater than or equal to 1.
+    Raises:
+        ValueError: If the threshold is greater than or equal to 1.
 
     Examples
-    --------
-    >>> import pandas as pd
-    >>> from sklearn.impute import SimpleImputer
-    >>> data = {'A': [1, 2, None, 4], 'B': [None, 2, 3, 4], 'C': [1, 2, 3, None]}
-    >>> df = pd.DataFrame(data)
-    >>> imputer = SimpleImputer(strategy='mean')
-    >>> handled_df = handling_missing_values(df, imputation={'A': imputer}, threshold=0.5)
-    col : B dropped! | miss_value : 1 | threshold : 2.0
-    >>> print(handled_df)
-         A    C
-    0  1.0  1.0
-    1  2.0  2.0
-    2  2.333333  3.0
-    3  4.0  2.0
+    ```python
+    import pandas as pd
+    from optialgo import handling_missing_values
+    from sklearn.impute import SimpleImputer
+    data = {'A': [1, 2, None, 4], 'B': [None, 2, 3, 4], 'C': [1, 2, 3, None]}
+    df = pd.DataFrame(data)
+    imputer = SimpleImputer(strategy='mean')
+    handled_df = handling_missing_values(df, imputation={'A': imputer}, threshold=0.5)
+    ```
 
-    Notes
-    -----
-    - This function creates a copy of the input DataFrame to avoid modifying the original DataFrame.
-    - Columns with missing values exceeding the specified threshold are dropped.
-    - For remaining columns with missing values, numerical columns are imputed using the median, and categorical
-      columns are imputed using the most frequent value.
+    Notes:
+    ```
+    1. This function creates a copy of the input DataFrame to avoid modifying the original DataFrame.
+    2. Columns with missing values exceeding the specified threshold are dropped.
+    3. For remaining columns with missing values, numerical columns are imputed using the median, and categorical columns are imputed using the most frequent value.
+    ```
     """
     from sklearn.impute import SimpleImputer
 
@@ -498,58 +431,39 @@ def sampling(
     dataframe: pd.DataFrame,
     features: list,
     target: str,
-    method: str = "smote",
+    method: Literal["smote", "over", "under"] = "smote",
     sampling_strategy: str = "auto",
     seed: int = 42,
 ):
     """
     Applies sampling techniques to balance the target classes in the dataframe.
 
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        The input dataframe containing the features and target column.
+    Args:
+        dataframe : The input dataframe containing the features and target column.
+        features : A list of feature column names to be used for sampling.
+        target : The name of the target column to be balanced.
+        method : The sampling method to be used.
+        sampling_strategy : The sampling strategy to use. Default is "auto".
+        seed : The random seed for reproducibility. Default is 42.
 
-    features : list
-        A list of feature column names to be used for sampling.
+    Returns:
+        pd.DataFrame: The dataframe with the target classes balanced according to the specified method.
 
-    target : str
-        The name of the target column to be balanced.
+    Raises:
+        ValueError: If an invalid sampling method is provided.
 
-    method : str, optional
-        The sampling method to be used. Options are:
-        - "under" : Random under-sampling
-        - "over" : Random over-sampling
-        - "smote" : Synthetic Minority Over-sampling Technique (default)
-
-    sampling_strategy : str, optional
-        The sampling strategy to use. Default is "auto".
-
-    seed : int, optional
-        The random seed for reproducibility. Default is 42.
-
-    Returns
-    -------
-    pd.DataFrame
-        The dataframe with the target classes balanced according to the specified method.
-
-    Raises
-    ------
-    ValueError
-        If an invalid sampling method is provided.
-
-    Example
-    -------
-    >>> df = pd.DataFrame({
-    ...     'feature1': [1, 2, 3, 4, 5, 6],
-    ...     'feature2': [7, 8, 9, 10, 11, 12],
-    ...     'target': [0, 0, 0, 1, 1, 1]
-    ... })
-    >>> sampled_df = sampling(df, features=['feature1', 'feature2'], target='target', method='over')
-    >>> sampled_df['target'].value_counts()
-    0    3
-    1    3
-    dtype: int64
+    Examples:
+    ```
+    import pandas as pd
+    from optialgo import sampling
+    df = pd.DataFrame({
+        'feature1': [1, 2, 3, 4, 5, 6],
+        'feature2': [7, 8, 9, 10, 11, 12],
+        'target': [0, 0, 0, 1, 1, 1]
+    })
+    sampled_df = sampling(df, features=['feature1', 'feature2'], target='target', method='over')
+    sampled_df['target'].value_counts()
+    ```
     """
     from imblearn.under_sampling import RandomUnderSampler
     from imblearn.over_sampling import SMOTE, RandomOverSampler
@@ -575,32 +489,27 @@ def pca(dataframe: pd.DataFrame, features: list, n_components: int) -> np.ndarra
     """
     Applies Principal Component Analysis (PCA) to reduce the dimensionality of the input data.
 
-    Parameters
-    ----------
-    dataframe : pd.DataFrame
-        The input dataframe containing the features.
+    Args:
+        dataframe : The input dataframe containing the features.
+        features : A list of feature column names to be used for PCA.
+        n_components : The number of principal components to retain.
 
-    features : list
-        A list of feature column names to be used for PCA.
+    Returns:
+        np.ndarray: The transformed data after PCA.
 
-    n_components : int
-        The number of principal components to retain.
-
-    Returns
-    -------
-    np.ndarray
-        The transformed data after PCA.
-
-    Example
-    -------
-    >>> df = pd.DataFrame({
-    ...     'feature1': [1, 2, 3],
-    ...     'feature2': [4, 5, 6],
-    ...     'feature3': [7, 8, 9]
-    ... })
-    >>> transformed_data = pca(df, features=['feature1', 'feature2', 'feature3'], n_components=2)
-    >>> transformed_data.shape
-    (3, 2)  # Assuming 3 samples and 2 principal components
+    Examples
+    ```python
+    import pandas as pd
+    from optialgo import PCA
+    df = pd.DataFrame({
+        'feature1': [1, 2, 3],
+        'feature2': [4, 5, 6],
+        'feature3': [7, 8, 9]
+    })
+    transformed_data = pca(df, features=['feature1', 'feature2', 'feature3'], n_components=2)
+    transformed_data.shape
+    # output : (3, 2)  # Assuming 3 samples and 2 principal components
+    ```
     """
     from sklearn.decomposition import PCA
 
@@ -619,36 +528,33 @@ def detect_outliers_zscore(df: pd.DataFrame, column: str, threshold: float = 3.0
     outliers based on the provided threshold. The Z-score is a measure of how many standard deviations
     a data point is from the mean. Outliers are data points with Z-scores greater than the given threshold.
 
-    Parameters
-    ----------
-    df : pd.DataFrame
-        The input DataFrame containing the data.
+    Args:
+        df : The input DataFrame containing the data.
 
-    column : str
-        The name of the column in which to detect outliers.
+        column : The name of the column in which to detect outliers.
 
-    threshold : float, optional
-        The Z-score threshold above which a data point is considered an outlier. Default is 3.0.
+        threshold : The Z-score threshold above which a data point is considered an outlier. Default is 3.0.
 
-    Returns
-    -------
-    pd.DataFrame
-        A DataFrame containing the rows of the input DataFrame that are considered outliers based on the Z-score.
+    Returns:
+        pd.DataFrame: A DataFrame containing the rows of the input DataFrame that are considered outliers based on the Z-score.
 
-    Example
-    -------
-    >>> data = {'values': [10, 12, 12, 13, 12, 15, 14, 16, 100]}
-    >>> df = pd.DataFrame(data)
-    >>> outliers = detect_outliers_zscore(df, column='values')
-    >>> print(outliers)
-    values   z_score
-    8     100  3.280537
+    Notes:
+    ```
+    1. This function creates a copy of the input DataFrame to avoid modifying the original DataFrame.
+    2. A new column 'z_score' is added to the copied DataFrame, which contains the calculated Z-scores.
+    3. The original DataFrame remains unmodified.
+    ```
 
-    Notes
-    -----
-    - This function creates a copy of the input DataFrame to avoid modifying the original DataFrame.
-    - A new column 'z_score' is added to the copied DataFrame, which contains the calculated Z-scores.
-    - The original DataFrame remains unmodified.
+    Examples:
+    ```python
+    import pandas as pd
+    from optialgo import detect_outliers_zscore
+    data = {'values': [10, 12, 12, 13, 12, 15, 14, 16, 100]}
+    df = pd.DataFrame(data)
+    outliers = detect_outliers_zscore(df, column='values')
+    print(outliers)
+    ```
+
     """
 
     df = df.copy()
@@ -665,33 +571,29 @@ def detect_outliers_iqr(df: pd.DataFrame, column: str):
     This function identifies outliers in a specified column of the DataFrame based on the Interquartile Range (IQR).
     Outliers are data points that fall below Q1 - 1.5 * IQR or above Q3 + 1.5 * IQR.
 
-    Parameters
-    ----------
-    df : pd.DataFrame
-        The input DataFrame containing the data.
+    Args:
+        df : The input DataFrame containing the data.
+        column : The name of the column in which to detect outliers.
 
-    column : str
-        The name of the column in which to detect outliers.
+    Returns:
+        pd.DataFrame: A DataFrame containing the rows of the input DataFrame that are considered outliers based on the IQR method.
 
-    Returns
-    -------
-    pd.DataFrame
-        A DataFrame containing the rows of the input DataFrame that are considered outliers based on the IQR method.
+    Notes:
+    ```
+    1. This function creates a copy of the input DataFrame to avoid modifying the original DataFrame.
+    2. Outliers are identified based on the lower and upper bounds calculated using the IQR method.
+    3. The original DataFrame remains unmodified.
+    ```
 
-    Example
-    -------
-    >>> data = {'values': [10, 12, 12, 13, 12, 15, 14, 16, 100]}
-    >>> df = pd.DataFrame(data)
-    >>> outliers = detect_outliers_iqr(df, column='values')
-    >>> print(outliers)
-    values
-    8     100
+    Examples:
+    ```python
+    from optialgo import detect_outlisers_iqr
+    import pandas as pd
+    data = {'values': [10, 12, 12, 13, 12, 15, 14, 16, 100]}
+    df = pd.DataFrame(data)
+    outliers = detect_outliers_iqr(df, column='values')
+    ```
 
-    Notes
-    -----
-    - This function creates a copy of the input DataFrame to avoid modifying the original DataFrame.
-    - Outliers are identified based on the lower and upper bounds calculated using the IQR method.
-    - The original DataFrame remains unmodified.
     """
     df = df.copy()
     Q1 = df[column].quantile(0.25)

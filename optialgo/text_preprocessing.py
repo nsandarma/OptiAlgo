@@ -10,17 +10,12 @@ def f_remove_punctuation(text: str, punctuation: str = string.punctuation) -> st
     """
     Remove punctuation from a single text string.
 
-    Parameters
-    ----------
-    text : str
-        The input text from which to remove punctuation.
-    punctuation : str, optional
-        The punctuation characters to remove, by default string.punctuation.
+    Args:
+        text : The input text from which to remove punctuation.
+        punctuation : The punctuation characters to remove, by default string.punctuation.
 
-    Returns
-    -------
-    str
-        The text with punctuation removed.
+    Returns:
+        str: The text with punctuation removed.
     """
     translation = str.maketrans(punctuation, " " * len(punctuation))
     return text.translate(translation)
@@ -32,17 +27,12 @@ def remove_punctuation(
     """
     Remove punctuation from a list of texts.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of texts.
-    punctuation : str, optional
-        The punctuation characters to remove, by default string.punctuation.
+    Args:
+        data : List of texts.
+        punctuation : The punctuation characters to remove, by default string.punctuation.
 
-    Returns
-    -------
-    List[str]
-        List of texts without punctuation.
+    Returns:
+        List[str] : List of texts without punctuation.
     """
     return [f_remove_punctuation(text, punctuation) for text in data]
 
@@ -51,15 +41,11 @@ def f_remove_digits(text: str) -> str:
     """
     Remove digits from a single text string.
 
-    Parameters
-    ----------
-    text : str
-        The input text from which to remove digits.
+    Args:
+        text : The input text from which to remove digits.
 
-    Returns
-    -------
-    str
-        The text with digits removed.
+    Returns:
+        str: The text with digits removed.
     """
     return re.sub(r"\d+", "", text)
 
@@ -68,15 +54,11 @@ def remove_digits(data: List[str]) -> List[str]:
     """
     Remove digits from a list of texts.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of texts.
+    Args:
+        data : List of texts.
 
-    Returns
-    -------
-    List[str]
-        List of texts without digits.
+    Returns:
+        List[str]: List of texts without digits.
     """
     return [f_remove_digits(text) for text in data]
 
@@ -86,15 +68,11 @@ def f_remove_url(text) -> str:
     """
     Remove URLs from a single text string.
 
-    Parameters
-    ----------
-    text : str
-        The input text from which to remove URLs.
+    Args:
+        text : The input text from which to remove URLs.
 
-    Returns
-    -------
-    str
-        The text with URLs removed.
+    Returns:
+        str: The text with URLs removed.
     """
     return re.compile(r"https?://\S+|www\.\S+").sub(r"", text)
 
@@ -103,15 +81,11 @@ def remove_url(data: List[str]) -> List[str]:
     """
     Remove URLs from a list of texts.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of texts.
+    Args:
+        data : List of texts.
 
-    Returns
-    -------
-    List[str]
-        List of texts without URLs.
+    Returns:
+        List[str]: List of texts without URLs.
     """
     return [f_remove_url(text) for text in data]
 
@@ -121,15 +95,11 @@ def f_remove_emoji(text: str) -> str:
     """
     Remove emojis from a single text string.
 
-    Parameters
-    ----------
-    text : str
-        The input text from which to remove emojis.
+    Args:
+        text : The input text from which to remove emojis.
 
-    Returns
-    -------
-    str
-        The text with emojis removed.
+    Returns:
+        str: The text with emojis removed.
     """
     emoji_pattern = re.compile(
         "["
@@ -154,15 +124,11 @@ def remove_emoji(data: List[str]) -> List[str]:
     """
     Remove emojis from a list of texts.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of texts.
+    Args:
+        data : List of texts.
 
-    Returns
-    -------
-    List[str]
-        List of texts without emojis.
+    Returns:
+        List[str]: List of texts without emojis.
     """
     return [f_remove_emoji(text) for text in data]
 
@@ -172,15 +138,11 @@ def f_remove_non_latin(text: str) -> str:
     """
     Remove non-Latin characters from a single text string.
 
-    Parameters
-    ----------
-    text : str
-        The input text from which to remove non-Latin characters.
+    Args:
+        text : The input text from which to remove non-Latin characters.
 
-    Returns
-    -------
-    str
-        The text with non-Latin characters removed.
+    Returns:
+        str: The text with non-Latin characters removed.
     """
     return re.sub(r"[^\x00-\x7F]+", "", text)
 
@@ -189,15 +151,11 @@ def remove_non_latin(data: List[str]) -> List[str]:
     """
     Remove non-Latin characters from a list of texts.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of texts.
+    Args:
+        data : List of texts.
 
-    Returns
-    -------
-    List[str]
-        List of texts without non-Latin characters.
+    Returns:
+        List[str]: List of texts without non-Latin characters.
     """
     return [f_remove_non_latin(text) for text in data]
 
@@ -219,17 +177,12 @@ def f_regex_word_tokenize(text: str, pattern: Pattern[str]) -> Tuple[str]:
     """
     Tokenize a text string using a regex pattern.
 
-    Parameters
-    ----------
-    text : str
-        The input text to tokenize.
-    pattern : Pattern[str]
-        The regex pattern to use for tokenization.
+    Args:
+        text : The input text to tokenize.
+        pattern : The regex pattern to use for tokenization.
 
-    Returns
-    -------
-    Tuple[str]
-        A tuple of tokens.
+    Returns:
+        Tuple[str]: A tuple of tokens.
     """
     from nltk.tokenize import regexp_tokenize
 
@@ -240,15 +193,11 @@ def f_word_tokenize(text: str):
     """
     Tokenize a text string using NLTK's word_tokenize.
 
-    Parameters
-    ----------
-    text : str
-        The input text to tokenize.
+    Args:
+        text : The input text to tokenize.
 
-    Returns
-    -------
-    Tuple[str]
-        A tuple of tokens.
+    Returns:
+        Tuple[str]: A tuple of tokens.
     """
     from nltk.tokenize import word_tokenize as wt
 
@@ -261,17 +210,12 @@ def word_tokenize(
     """
     Tokenize a list of text strings.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of texts to tokenize.
-    pattern : Optional[Pattern[str]], optional
-        The regex pattern to use for tokenization, by default None.
+    Args:
+        data : List of texts to tokenize.
+        pattern : The regex pattern to use for tokenization, by default None.
 
-    Returns
-    -------
-    List[Tuple[str, ...]]
-        List of tuples of tokens.
+    Returns:
+        List[Tuple[str, ...]]: List of tuples of tokens.
     """
     if pattern:
         return [f_regex_word_tokenize(x, pattern=pattern) for x in data]
@@ -283,15 +227,11 @@ def token_to_str(data: List[Tuple[str]]) -> List[str]:
     """
     Convert a list of token tuples to a list of strings.
 
-    Parameters
-    ----------
-    data : List[Tuple[str]]
-        List of token tuples.
+    Args:
+        data : List of token tuples.
 
-    Returns
-    -------
-    List[str]
-        List of strings joined from tokens.
+    Returns:
+        List[str]: List of strings joined from tokens.
     """
     return [" ".join(x) for x in data]
 
@@ -300,15 +240,11 @@ def find_duplicates(data: List[str]) -> dict:
     """
     Find duplicates in a list of strings and return their indices.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of strings to check for duplicates.
+    Args:
+        data : List of strings to check for duplicates.
 
-    Returns
-    -------
-    dict
-        A dictionary where keys are duplicate strings and values are lists of their indices.
+    Returns:
+        dict: A dictionary where keys are duplicate strings and values are lists of their indices.
     """
     from collections import defaultdict
 
@@ -340,53 +276,25 @@ def text_clean(
     """
     Clean a list of text data based on specified parameters.
 
-    Parameters
-    ----------
-    data : List[str]
-        List of strings to clean.
+    Args:
+        data : List of strings to clean.
+        punctuation : Punctuation characters to remove, by default string.punctuation.
+        lower : Convert text to lowercase, by default True.
+        digits : Remove digits from text, by default True.
+        emoji : Remove emojis from text, by default True.
+        duplicates : Remove duplicate entries from data, by default True.
+        url : Remove URLs from text, by default True.
+        non_latin : Remove non-Latin characters from text, by default True.
+        return_token : Tokenize text and return tokens, by default False.
+        return_dataframe : Return result as a Pandas DataFrame, by default False.
+        verbose : Display progress using tqdm, by default False.
+        pattern : Regex pattern for tokenization, by default None.
 
-    punctuation : str, optional
-        Punctuation characters to remove, by default string.punctuation.
+    Returns:
+        List[str]: Cleaned list of text data.
 
-    lower : bool, optional
-        Convert text to lowercase, by default True.
-
-    digits : bool, optional
-        Remove digits from text, by default True.
-
-    emoji : bool, optional
-        Remove emojis from text, by default True.
-
-    duplicates : bool, optional
-        Remove duplicate entries from data, by default True.
-
-    url : bool, optional
-        Remove URLs from text, by default True.
-
-    non_latin : bool, optional
-        Remove non-Latin characters from text, by default True.
-
-    return_token : bool, optional
-        Tokenize text and return tokens, by default False.
-
-    return_dataframe : bool, optional
-        Return result as a Pandas DataFrame, by default False.
-
-    verbose : bool, optional
-        Display progress using tqdm, by default False.
-
-    pattern : Optional[Pattern[str]], optional
-        Regex pattern for tokenization, by default None.
-
-    Returns
-    -------
-    List[str]
-        Cleaned list of text data.
-
-    Raises
-    ------
-    ValueError
-        If return_dataframe is True but lengths of data and cleaned data don't match.
+    Raises:
+        ValueError: If return_dataframe is True but lengths of data and cleaned data don't match.
     """
     from tqdm import tqdm
 
@@ -441,10 +349,8 @@ def get_stopwords_en() -> List[str]:
     """
     Get English stopwords from NLTK corpus.
 
-    Returns
-    -------
-    List[str]
-        List of English stopwords.
+    Returns:
+        List[str]: List of English stopwords.
     """
     return st.words("english")
 
@@ -453,10 +359,9 @@ def get_stopwords_idn() -> List[str]:
     """
     Get Indonesian stopwords from NLTK corpus.
 
-    Returns
-    -------
-    List[str]
-        List of Indonesian stopwords.
+    Returns:
+        List[str]
+            List of Indonesian stopwords.
     """
     return st.words("indonesian")
 
@@ -467,19 +372,13 @@ def f_stopwords(
     """
     Remove stopwords from a token or tuple of tokens.
 
-    Parameters
-    ----------
-    token : Union[Tuple[str], str]
-        Token or tuple of tokens to filter.
-    stopwords : Set[str]
-        Set of stopwords to filter out.
-    return_token : bool, optional
-        Whether to return tokens (True) or a joined string (False), by default False.
+    Args:
+        token : Token or tuple of tokens to filter.
+        stopwords : Set of stopwords to filter out.
+        return_token : Whether to return tokens (True) or a joined string (False), by default False.
 
-    Returns
-    -------
-    Union[Tuple[str, ...], str]
-        Filtered tokens or joined string without stopwords.
+    Returns:
+        Union[Tuple[str, ...], str]: Filtered tokens or joined string without stopwords.
     """
     if isinstance(token, str):
         token = f_word_tokenize(token)
@@ -500,25 +399,16 @@ def remove_stopwords(
     """
     Remove stopwords from a list of tokenized texts.
 
-    Parameters
-    ----------
-    tokens : List[Union[Tuple[str], List[str]]]
-        List of tokenized texts, where each item can be a tuple or list of tokens.
-    lang : str
-        Language code for stopwords ('english' or 'indonesian').
-    stopwords : Optional[List[str]], optional
-        List of additional stopwords to remove, by default None.
-    additional : Optional[List[str]], optional
-        List of additional stopwords to add, by default None.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined strings (False), by default True.
-    verbose : bool, optional
-        Whether to display progress bar, by default False.
+    Args:
+        tokens : List of tokenized texts, where each item can be a tuple or list of tokens.
+        lang : Language code for stopwords ('english' or 'indonesian').
+        stopwords : List of additional stopwords to remove, by default None.
+        additional : List of additional stopwords to add, by default None.
+        return_token : Whether to return tokens (True) or joined strings (False), by default True.
+        verbose : Whether to display progress bar, by default False.
 
-    Returns
-    -------
-    Union[List[str], List[Tuple[str]]]
-        List of tokenized texts with stopwords removed.
+    Returns:
+        Union[List[str], List[Tuple[str]]]: List of tokenized texts with stopwords removed.
     """
     from tqdm import tqdm
 
@@ -557,19 +447,13 @@ def f_normalize(
     """
     Normalize tokens using a dictionary of normalization mappings.
 
-    Parameters
-    ----------
-    token : Union[Tuple[str], str]
-        Token or tuple of tokens to normalize.
-    norm_words : dict
-        Dictionary mapping tokens to their normalized forms.
-    return_token : bool, optional
-        Whether to return tokens (True) or a joined string (False), by default False.
+    Args:
+        token : Token or tuple of tokens to normalize.
+        norm_words : Dictionary mapping tokens to their normalized forms.
+        return_token : Whether to return tokens (True) or a joined string (False), by default False.
 
-    Returns
-    -------
-    Union[Tuple[str, ...], str]
-        Normalized tokens or joined string of normalized tokens.
+    Returns:
+        Union[Tuple[str, ...], str]: Normalized tokens or joined string of normalized tokens.
     """
     if isinstance(token, str):
         token = f_word_tokenize(token)
@@ -589,21 +473,14 @@ def normalize(
     """
     Normalize a list of tokenized texts using a dictionary of normalization mappings.
 
-    Parameters
-    ----------
-    tokens : List[Union[Tuple[str], List[str]]]
-        List of tokenized texts, where each item can be a tuple or list of tokens.
-    norm_words : dict
-        Dictionary mapping tokens to their normalized forms.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined strings (False), by default True.
-    verbose : bool, optional
-        Whether to display progress bar, by default False.
+    Args:
+        tokens : List of tokenized texts, where each item can be a tuple or list of tokens.
+        norm_words : Dictionary mapping tokens to their normalized forms.
+        return_token : Whether to return tokens (True) or joined strings (False), by default True.
+        verbose : Whether to display progress bar, by default False.
 
-    Returns
-    -------
-    List[Union[str, Tuple[str]]]
-        List of normalized texts.
+    Returns:
+        List[Union[str, Tuple[str]]]: List of normalized texts.
     """
     from tqdm import tqdm
 
@@ -629,18 +506,14 @@ def f_lemmatization_idn(text: str, return_token: bool = False) -> Union[Tuple]:
     """
     Lemmatize Indonesian text.
 
-    Parameters
-    ----------
-    text : str
-        Input text to lemmatize.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
+    Args:
+        text : Input text to lemmatize.
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
 
-    Returns
-    -------
-    Union[Tuple[str], str]
-        If return_token is True, returns a tuple of lemmatized tokens.
-        If return_token is False, returns the lemmatized text as a string.
+    Returns:
+        Union[Tuple[str], str]:
+            If return_token is True, returns a tuple of lemmatized tokens.
+            If return_token is False, returns the lemmatized text as a string.
     """
     text = __get_lemmatizer(lang="indonesian").lemmatize(text)
     if return_token:
@@ -667,18 +540,14 @@ def f_lemmatization_en(
     """
     Lemmatize English tokens based on their part-of-speech tags using a lemmatizer.
 
-    Parameters
-    ----------
-    token : Union[Tuple[str], str]
-        Token or tuple of tokens to lemmatize.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
+    Args:
+        token : Token or tuple of tokens to lemmatize.
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
 
-    Returns
-    -------
-    Union[Tuple[str, ...], str]
-        If return_token is True, returns a tuple of lemmatized tokens.
-        If return_token is False, returns the lemmatized text as a joined string.
+    Returns:
+        Union[Tuple[str, ...], str]:
+            If return_token is True, returns a tuple of lemmatized tokens.
+            If return_token is False, returns the lemmatized text as a joined string.
     """
     import nltk
 
@@ -709,18 +578,14 @@ def f_stemming_idn(
     """
     Perform stemming on Indonesian text.
 
-    Parameters
-    ----------
-    text : str
-        Input text to stem.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
+    Args:
+        text : Input text to stem.
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
 
-    Returns
-    -------
-    Union[Tuple[str, ...], str]
-        If return_token is True, returns a tuple of stemmed tokens.
-        If return_token is False, returns the stemmed text as a joined string.
+    Returns:
+        Union[Tuple[str, ...], str]:
+            If return_token is True, returns a tuple of stemmed tokens.
+            If return_token is False, returns the stemmed text as a joined string.
     """
     text = __get_stemmer(lang="indonesian").stem(text)
     if return_token:
@@ -732,18 +597,14 @@ def f_stemming_en(text: str, return_token: bool = False) -> Union[Tuple[str, ...
     """
     Perform stemming on English text.
 
-    Parameters
-    ----------
-    text : str
-        Input text to stem.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
+    Args:
+        text : Input text to stem.
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
 
-    Returns
-    -------
-    Union[Tuple[str, ...], str]
-        If return_token is True, returns a tuple of stemmed tokens.
-        If return_token is False, returns the stemmed text as a joined string.
+    Returns:
+        Union[Tuple[str, ...], str]:
+            If return_token is True, returns a tuple of stemmed tokens.
+            If return_token is False, returns the stemmed text as a joined string.
     """
     if isinstance(text, str):
         text = f_word_tokenize(text)
@@ -762,23 +623,17 @@ def lemmatization(
     """
     Lemmatize tokenized texts based on language.
 
-    Parameters
-    ----------
-    data : Union[List[Tuple[str]], List[str]]
-        List of tokenized texts, where each item can be a tuple or list of tokens.
-    lang : str
-        Language code for lemmatization ('indonesian' or 'english').
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
-    verbose : bool, optional
-        Whether to display progress bar, by default False.
+    Args:
+        data : List of tokenized texts, where each item can be a tuple or list of tokens.
+        lang : Language code for lemmatization ('indonesian' or 'english').
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
+        verbose : Whether to display progress bar, by default False.
 
-    Returns
-    -------
-    List[Union[Tuple[str], str]]
-        List of lemmatized texts.
-        If return_token is True, each item is a tuple of lemmatized tokens.
-        If return_token is False, each item is a joined string of lemmatized tokens.
+    Returns:
+        List[Union[Tuple[str], str]]:
+            List of lemmatized texts.
+            If return_token is True, each item is a tuple of lemmatized tokens.
+            If return_token is False, each item is a joined string of lemmatized tokens.
     """
     if lang not in ("indonesian", "english"):
         raise ValueError("lang not found !")
@@ -819,23 +674,17 @@ def stemming(
     """
     Perform stemming on tokenized texts based on language.
 
-    Parameters
-    ----------
-    data : List[Tuple[str]]
-        List of tokenized texts, where each item is a tuple of tokens.
-    lang : str
-        Language code for stemming ('indonesian' or 'english').
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
-    verbose : bool, optional
-        Whether to display a progress bar, by default False.
+    Args:
+        data : List of tokenized texts, where each item is a tuple of tokens.
+        lang : Language code for stemming ('indonesian' or 'english').
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
+        verbose : Whether to display a progress bar, by default False.
 
-    Returns
-    -------
-    List[str]
-        List of stemmed texts.
-        If return_token is True, each item is a list of stemmed tokens.
-        If return_token is False, each item is a joined string of stemmed tokens.
+    Returns:
+        List[str]:
+            List of stemmed texts.
+            If return_token is True, each item is a list of stemmed tokens.
+            If return_token is False, each item is a joined string of stemmed tokens.
     """
     from tqdm import tqdm
 
@@ -883,32 +732,21 @@ def text_manipulation(
     """
     Perform text manipulation including normalization, stopword removal, stemming or lemmatization.
 
-    Parameters
-    ----------
-    tokens : List[Tuple[str]]
-        List of tokenized texts, where each item is a tuple of tokens.
-    lang : str
-        Language code for text manipulation ('indonesian' or 'english').
-    stopwords : Union[List[str], bool], optional
-        List of stopwords or True to use default stopwords for the specified language, by default False.
-    stem : bool, optional
-        Whether to perform stemming (True) or lemmatization (False), by default False.
-    return_dataframe : bool, optional
-        Whether to return results as a DataFrame, by default False.
-    norm_words : Optional[dict], optional
-        Dictionary of normalization words, by default None.
-    return_token : bool, optional
-        Whether to return tokens (True) or joined string (False), by default False.
-    additional : Optional[List[str]], optional
-        Additional stopwords to include, by default None.
-    verbose : bool, optional
-        Whether to display progress bars for preprocessing steps, by default False.
+    Args:
+        tokens : List of tokenized texts, where each item is a tuple of tokens.
+        lang : Language code for text manipulation ('indonesian' or 'english').
+        stopwords : List of stopwords or True to use default stopwords for the specified language, by default False.
+        stem : Whether to perform stemming (True) or lemmatization (False), by default False.
+        return_dataframe : Whether to return results as a DataFrame, by default False.
+        norm_words : Dictionary of normalization words, by default None.
+        return_token : Whether to return tokens (True) or joined string (False), by default False.
+        additional : Additional stopwords to include, by default None.
+        verbose : Whether to display progress bars for preprocessing steps, by default False.
 
-    Returns
-    -------
-    Union[List[str], pd.DataFrame]
-        If return_dataframe is False, returns a list of preprocessed texts/tokens.
-        If return_dataframe is True, returns a pandas DataFrame with columns "raw" and "pre".
+    Returns:
+        Union[List[str], pd.DataFrame]:
+            If return_dataframe is False, returns a list of preprocessed texts/tokens.
+            If return_dataframe is True, returns a pandas DataFrame with columns "raw" and "pre".
     """
     if not any(isinstance(x, (list, tuple)) for x in tokens):
         raise ValueError("data is not tokenizerd")
@@ -956,50 +794,37 @@ class Tokenizer:
     """
     A class to tokenize text data, transform it into sequences, and pad sequences.
 
-    Attributes
-    ----------
-    min_count : Optional[int]
-        Minimum frequency count for words to be included in the vocabulary.
-    filters : Optional[str]
-        Characters to filter out from the text.
-    oov_token : str
-        Token to use for out-of-vocabulary words.
-    maxlen : int
-        Maximum length of sequences. If 0, it will be calculated based on the data.
-    padding : Literal["pre", "post"]
-        Padding type ("pre" or "post").
-    truncating : Literal["pre", "post"]
-        Truncating type ("pre" or "post").
-    value : int
-        Value used for padding.
-    dtype : str
-        Data type of the padded sequences.
+    Attributes:
+        min_count : Minimum frequency count for words to be included in the vocabulary.
+        filters : Characters to filter out from the text.
+        oov_token : Token to use for out-of-vocabulary words.
+        maxlen : Maximum length of sequences. If 0, it will be calculated based on the data.
+        padding : Padding type ("pre" or "post").
+        truncating : Truncating type ("pre" or "post").
+        value : Value used for padding.
+        dtype : Data type of the padded sequences.
 
-    Methods
-    -------
-    fit(data: Union[List[str], List[Tuple[str]]], y=None)
-        Fits the tokenizer on the given data.
-    transform(data)
-        Transforms the given data into padded sequences.
-    encode(text: str) -> list
-        Encodes a single text string into a sequence of integers.
-    decode(token: list) -> str
-        Decodes a sequence of integers back into a text string.
-    texts_to_sequences(text: list) -> list
-        Converts a list of text strings into sequences of integers.
-    sequences_to_texts(sequences: list) -> list
-        Converts a list of sequences of integers back into text strings.
-    sequences_to_pad(sequences: list)
-        Pads a list of sequences to the maximum length.
-    texts_to_pad_sequences(text: list)
-        Converts a list of text strings into padded sequences.
+    Methods:
+        fit(data: Union[List[str], List[Tuple[str]]], y=None)
+            Fits the tokenizer on the given data.
+        transform(data)
+            Transforms the given data into padded sequences.
+        encode(text: str) -> list
+            Encodes a single text string into a sequence of integers.
+        decode(token: list) -> str
+            Decodes a sequence of integers back into a text string.
+        texts_to_sequences(text: list) -> list
+            Converts a list of text strings into sequences of integers.
+        sequences_to_texts(sequences: list) -> list
+            Converts a list of sequences of integers back into text strings.
+        sequences_to_pad(sequences: list)
+            Pads a list of sequences to the maximum length.
+        texts_to_pad_sequences(text: list)
+            Converts a list of text strings into padded sequences.
 
-    Properties
-    ----------
-    word_index : dict
-        A dictionary mapping words to their integer indices.
-    index_word : dict
-        A dictionary mapping integer indices to their corresponding words.
+    Properties:
+        word_index : A dictionary mapping words to their integer indices.
+        index_word : A dictionary mapping integer indices to their corresponding words.
     """
 
     def __init__(
@@ -1016,24 +841,15 @@ class Tokenizer:
         """
         Initializes the Tokenizer with the specified parameters.
 
-        Parameters
-        ----------
-        oov_token : str, optional
-            Token to use for out-of-vocabulary words (default is None).
-        filters : Optional[str], optional
-            Characters to filter out from the text (default is string.punctuation).
-        min_count : Optional[int], optional
-            Minimum frequency count for words to be included in the vocabulary (default is None).
-        maxlen : int, optional
-            Maximum length of sequences (default is 0, which means it will be calculated based on the data).
-        padding : Literal["pre", "post"], optional
-            Padding type ("pre" or "post", default is "pre").
-        truncating : Literal["pre", "post"], optional
-            Truncating type ("pre" or "post", default is "pre").
-        value : int, optional
-            Value used for padding (default is 0).
-        dtype : str, optional
-            Data type of the padded sequences (default is "int32").
+        Args:
+            oov_token : Token to use for out-of-vocabulary words (default is None).
+            filters : Characters to filter out from the text (default is string.punctuation).
+            min_count : Minimum frequency count for words to be included in the vocabulary (default is None).
+            maxlen : Maximum length of sequences (default is 0, which means it will be calculated based on the data).
+            padding : Padding type ("pre" or "post", default is "pre").
+            truncating : Truncating type ("pre" or "post", default is "pre").
+            value : Value used for padding (default is 0).
+            dtype : Data type of the padded sequences (default is "int32").
         """
         self.min_count = min_count
         self.filters = filters
@@ -1048,17 +864,12 @@ class Tokenizer:
         """
         Fits the tokenizer on the given data.
 
-        Parameters
-        ----------
-        data : Union[List[str], List[Tuple[str]]]
-            The input data to fit the tokenizer on.
-        y : optional
-            Not used, present for compatibility with sklearn API.
+        Args:
+            data : The input data to fit the tokenizer on.
+            y : Not used, present for compatibility with sklearn API.
 
-        Returns
-        -------
-        Tokenizer
-            The fitted Tokenizer object.
+        Returns:
+            Tokenizer: The fitted Tokenizer object.
         """
         import pandas as pd
 
@@ -1091,15 +902,11 @@ class Tokenizer:
         """
         Transforms the given data into padded sequences.
 
-        Parameters
-        ----------
-        data : Union[List[str], List[Tuple[str]]]
-            The input data to transform.
+        Args:
+            data : The input data to transform.
 
-        Returns
-        -------
-        np.ndarray
-            The transformed and padded sequences.
+        Returns:
+            np.ndarray: The transformed and padded sequences.
         """
         import pandas as pd
 
@@ -1111,15 +918,11 @@ class Tokenizer:
         """
         Encodes a single text string into a sequence of integers.
 
-        Parameters
-        ----------
-        text : str
-            The text string to encode.
+        Args:
+            text : The text string to encode.
 
-        Returns
-        -------
-        list
-            The encoded sequence of integers.
+        Returns:
+            list: The encoded sequence of integers.
         """
         if self.oov_token:
             return [
@@ -1137,15 +940,11 @@ class Tokenizer:
         """
         Decodes a sequence of integers back into a text string.
 
-        Parameters
-        ----------
-        token : list
-            The sequence of integers to decode.
+        Args:
+            token : The sequence of integers to decode.
 
-        Returns
-        -------
-        str
-            The decoded text string.
+        Returns:
+            str: The decoded text string.
         """
         return " ".join([self.__int_to_str[t] for t in token if t in self.__int_to_str])
 
@@ -1153,15 +952,11 @@ class Tokenizer:
         """
         Converts a list of text strings into sequences of integers.
 
-        Parameters
-        ----------
-        text : list
-            The list of text strings to convert.
+        Args:
+            text : The list of text strings to convert.
 
-        Returns
-        -------
-        list
-            The list of sequences of integers.
+        Returns:
+            list: The list of sequences of integers.
         """
         return [
             self.encode(f_remove_punctuation(s, punctuation=self.filters)) for s in text
@@ -1171,15 +966,11 @@ class Tokenizer:
         """
         Converts a list of sequences of integers back into text strings.
 
-        Parameters
-        ----------
-        sequences : list
-            The list of sequences of integers to convert.
+        Args:
+            sequences : The list of sequences of integers to convert.
 
-        Returns
-        -------
-        list
-            The list of decoded text strings.
+        Returns:
+            list: The list of decoded text strings.
         """
         return [self.decode(s) for s in sequences]
 
@@ -1187,15 +978,11 @@ class Tokenizer:
         """
         Pads a list of sequences to the maximum length.
 
-        Parameters
-        ----------
-        sequences : list
-            The list of sequences to pad.
+        Args:
+            sequences : The list of sequences to pad.
 
-        Returns
-        -------
-        np.ndarray
-            The padded sequences.
+        Returns:
+            np.ndarray: The padded sequences.
         """
         import numpy as np
 
@@ -1227,15 +1014,11 @@ class Tokenizer:
         """
         Converts a list of text strings into padded sequences.
 
-        Parameters
-        ----------
-        text : list
-            The list of text strings to convert.
+        Args:
+            text : The list of text strings to convert.
 
-        Returns
-        -------
-        np.ndarray
-            The padded sequences.
+        Returns:
+            np.ndarray: The padded sequences.
         """
         sequences = self.texts_to_sequences(text)
         return self.sequences_to_pad(sequences)
@@ -1245,10 +1028,8 @@ class Tokenizer:
         """
         Returns the word-to-index dictionary.
 
-        Returns
-        -------
-        dict
-            The word-to-index dictionary.
+        Returns:
+            dict: The word-to-index dictionary.
         """
         return self.__str_to_int
 
@@ -1257,10 +1038,8 @@ class Tokenizer:
         """
         Returns the index-to-word dictionary.
 
-        Returns
-        -------
-        dict
-            The index-to-word dictionary.
+        Returns:
+            dict: The index-to-word dictionary.
         """
         return self.__int_to_str
 
@@ -1273,20 +1052,15 @@ def count_words(
     """
     Count the occurrences of words in a list of tokenized texts or strings.
 
-    Parameters
-    ----------
-    data : Union[List[str], List[Tuple[str]]]
-        List of tokenized texts (list of tuples or list of strings).
-    min_count : Optional[int], optional
-        Minimum count threshold for words to be included in the result, by default None.
-    return_dataframe : bool, optional
-        Whether to return the result as a pandas DataFrame, by default False.
+    Args:
+        data : List of tokenized texts (list of tuples or list of strings).
+        min_count : Minimum count threshold for words to be included in the result, by default None.
+        return_dataframe : Whether to return the result as a pandas DataFrame, by default False.
 
-    Returns
-    -------
-    Union[dict, pd.DataFrame]
-        If return_dataframe is False, returns a dictionary where keys are words and values are counts.
-        If return_dataframe is True, returns a DataFrame with columns "words" and "counts".
+    Returns:
+        Union[dict, pd.DataFrame]:
+            If return_dataframe is False, returns a dictionary where keys are words and values are counts.
+            If return_dataframe is True, returns a DataFrame with columns "words" and "counts".
     """
     from collections import Counter
 

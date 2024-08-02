@@ -1,14 +1,32 @@
-site_name: optialgo docs
+site_name: optialgo docs v1.0.3
 repo_url: https://github.com/nsandarma/optialgo
-
 nav : 
   - Home:
     - index.md
+    - Tutorials:
+      - tutorials/make_dataset.md
+      - tutorials/model.md
+      - tutorials/text_preprocessing.md
+      - tutorials/text_classification.md
+    
     - API Reference :
       - Structured Data :
         - dataset.md
+        - Utils:
+          - utils/feature_selection.md
+          - utils/handle_missing_values.md
+          - utils/dimensionality_reduction.md
       - Unsctructured Data : 
         - text_dataset.md
+        - Utils:
+          - utils/text_preprocessing.md
+      - Model :
+        - abc.md
+        - classification.md
+        - regression.md
+      
+
+
 
 markdown_extensions:
 - attr_list
@@ -39,6 +57,9 @@ markdown_extensions:
 
 theme : 
   name : material
+  logo : logo_optialgo.svg
+  favicon : logo_optialgo.svg
+
   font : 
     text : Ubuntu
     code : Roboto Mono
@@ -64,14 +85,14 @@ theme :
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: black
-      accent: lime
+      accent: teal
       toggle:
         icon: material/lightbulb
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: black
-      accent:  lime
+      accent:  indigo
       toggle:
         icon: material/lightbulb-outline
         name: Switch to light mode

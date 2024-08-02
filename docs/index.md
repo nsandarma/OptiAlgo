@@ -1,9 +1,9 @@
 # Home
 
-## `optialgo` dan `scikit-learn`
-Jika kamu sudah biasa membuat model dengan `scikit-learn`, selamat 🤩 kamu akan mudah menggunakan optialgo !
+## `optialgo` and `scikit-learn`
+If you are used to modeling with `scikit-learn`, congratulations 🤩 you will find optialgo easy to use!
 
-## Fitur
+## Main Features
 ```
 1. Data Prepration
 2. Data Preprocessing
@@ -13,20 +13,20 @@ Jika kamu sudah biasa membuat model dengan `scikit-learn`, selamat 🤩 kamu aka
 5. Prediction
 6. HyperParameter Tuning
 ```
-## Instalasi
+## Installation
 
-**Sebelum install OptiAlgo, disarankan membuat environment terlebih dahulu.**
+**Before installing OptiAlgo, it is recommended to create an environment first.**
 
 ```console
 pip install optialgo
 ```
-atau
+or
 
 ```console
 pip install git+https://github.com/nsandarma/OptiAlgo.git
 ```
 
-*dan untuk kebutuhan text preprocessing*
+*and for text preprocessing*
 
 ```console
 >>> import nltk

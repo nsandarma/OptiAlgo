@@ -1,0 +1,2 @@
+# Abstract Class
+::: optialgo.Parent

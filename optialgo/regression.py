@@ -47,40 +47,34 @@ class Regression(Parent):
         This method computes a specified error metric based on the true and predicted values of the target variable.
         It uses the metrics stored in the `self.METRICS` dictionary.
 
-        Parameters
-        ----------
-        y_true : array-like
-            True values of the target variable.
+        Args:
+            y_true : True values of the target variable.
 
-        y_pred : array-like
-            Predicted values of the target variable.
+            y_pred : Predicted values of the target variable.
 
-        metric : str, optional
-            The metric to be used for evaluating the predictions.
-            Default is "mean_absolute_error". Possible values include:
-            - "mean_absolute_error"
-            - "mean_squared_error"
-            - "mean_absolute_percentage_error"
-            - Other metrics defined in `self.METRICS`.
+            metric :
+                The metric to be used for evaluating the predictions.
+                Default is "mean_absolute_error". Possible values include:
+                - "mean_absolute_error"
+                - "mean_squared_error"
+                - "mean_absolute_percentage_error"
+                - Other metrics defined in `self.METRICS`.
 
-        Returns
-        -------
-        float
-            The computed error metric value.
+        Returns:
+            float: The computed error metric value.
 
-        Raises
-        ------
-        KeyError
-            If the specified metric is not found in `self.METRICS`.
+        Raises:
+            KeyError: If the specified metric is not found in `self.METRICS`.
 
-        Example
-        -------
-        >>> y_true = [3.0, -0.5, 2.0, 7.0]
-        >>> y_pred = [2.5, 0.0, 2.0, 8.0]
-        >>> regressor = Regressor(dataset, algorithm='linear_regression')
-        >>> mae = regressor.score(y_true, y_pred, metric='mean_absolute_error')
-        >>> print(mae)
-        0.5
+        Examples:
+        ```python
+        y_true = [3.0, -0.5, 2.0, 7.0]
+        y_pred = [2.5, 0.0, 2.0, 8.0]
+        regressor = Regressor(dataset, algorithm='linear_regression')
+        mae = regressor.score(y_true, y_pred, metric='mean_absolute_error')
+        print(mae)
+        # output : 0.5
+        ```
         """
         err = self.METRICS[metric](y_true=y_true, y_pred=y_pred)
         return err
@@ -114,32 +108,29 @@ class Regression(Parent):
         true and predicted values of the target variable. It returns a dictionary with the names
         of the metrics as keys and their computed values as values.
 
-        Parameters
-        ----------
-        y_true : array-like
-            True values of the target variable.
+        Args:
+            y_true : True values of the target variable.
+            y_pred : Predicted values of the target variable.
 
-        y_pred : array-like
-            Predicted values of the target variable.
-
-        Returns
-        -------
-        dict
-            A dictionary containing the names and values of the computed metrics. The keys are
+        Returns:
+            dict: A dictionary containing the names and values of the computed metrics. The keys are
             the metric names (as defined in `self.METRICS`) and the values are the corresponding
             metric values.
 
-        Example
-        -------
-        >>> y_true = [3.0, -0.5, 2.0, 7.0]
-        >>> y_pred = [2.5, 0.0, 2.0, 8.0]
-        >>> regressor = Regressor(dataset, algorithm='linear_regression')
-        >>> report = regressor.score_report(y_true, y_pred)
-        >>> for metric, value in report.items():
-        >>>     print(f"{metric}: {value:.4f}")
+        Examples:
+        ```python
+        y_true = [3.0, -0.5, 2.0, 7.0]
+        y_pred = [2.5, 0.0, 2.0, 8.0]
+        regressor = Regressor(dataset, algorithm='linear_regression')
+        report = regressor.score_report(y_true, y_pred)
+        for metric, value in report.items():
+            print(f"{metric}: {value:.4f}")
+        ''' output :
         mean_absolute_error: 0.5000
         mean_squared_error: 0.3750
         mean_absolute_percentage_error: 0.1271
+        '''
+        ```
         """
         res = {}
         for i in self.METRICS:
@@ -160,40 +151,35 @@ class Regression(Parent):
         cross-validation, and compiles performance metrics. The results can be output in different
         formats, including dictionary, pandas DataFrame, or a formatted table.
 
-        Parameters
-        ----------
-        output : str, optional
-            The format of the output. It can be:
-            - "dict": Returns the results as a dictionary (default).
-            - "dataframe": Returns the results as a pandas DataFrame.
-            - "table": Prints the results as a formatted table.
-            - "only_score": Returns only the Mean Absolute Percentage Error (MAPE) scores in a simplified dictionary.
+        Args:
+            output : The format of the output. It can be:
+                - "dict": Returns the results as a dictionary (default).
+                - "dataframe": Returns the results as a pandas DataFrame.
+                - "table": Prints the results as a formatted table.
+                - "only_score": Returns only the Mean Absolute Percentage Error (MAPE) scores in a simplified dictionary.
 
-        train_val : bool, optional
-            If True, the function evaluates the models using a train-validation split.
-            If False, the function uses cross-validation. Default is False.
+            train_val : If True, the function evaluates the models using a train-validation split.
+                If False, the function uses cross-validation. Default is False.
 
-        Returns
-        -------
-        dict or pd.DataFrame or None
-            The function returns results based on the `output` parameter:
-            - If `output` is "dict", it returns a dictionary of the results.
-            - If `output` is "dataframe", it returns a pandas DataFrame of the results.
-            - If `output` is "table", it prints the results as a formatted table.
-            - If `output` is "only_score", it returns a dictionary with only the MAPE scores.
+        Returns:
+            dict or pd.DataFrame or None:
+                The function returns results based on the `output` parameter:
+                - If `output` is "dict", it returns a dictionary of the results.
+                - If `output` is "dataframe", it returns a pandas DataFrame of the results.
+                - If `output` is "table", it prints the results as a formatted table.
+                - If `output` is "only_score", it returns a dictionary with only the MAPE scores.
 
-        Raises
-        ------
-        ValueError
-            If an invalid output type is provided.
+        Raises:
+            ValueError: If an invalid output type is provided.
 
-        Example
-        -------
-        >>> dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
-        >>> dataset.fit(features=features,target=target)
-        >>> regressor = Regressor(dataset, algorithm='random_forest')
-        >>> results = regressor.compare_model(output='dataframe', train_val=True)
-        >>> print(results)
+        Examples:
+        ```python
+        dataset = Dataset(dataframe, norm=True, test_size=0.3, seed=123)
+        dataset.fit(features=features,target=target)
+        regressor = Regressor(dataset, algorithm='random_forest')
+        results = regressor.compare_model(output='dataframe', train_val=True)
+        print(results)
+        ```
         """
         result = {}
         X_train, X_test, y_train, y_test = self.dataset.get_x_y()
