@@ -37,6 +37,7 @@ def remove_punctuation(
     return [f_remove_punctuation(text, punctuation) for text in data]
 
 
+@lru_cache(maxsize=None)
 def f_remove_digits(text: str) -> str:
     """
     Remove digits from a single text string.
@@ -61,6 +62,16 @@ def remove_digits(data: List[str]) -> List[str]:
         List[str]: List of texts without digits.
     """
     return [f_remove_digits(text) for text in data]
+
+
+@lru_cache(maxsize=None)
+def f_remove_tag_html(text: str) -> str:
+    pattern = re.compile("<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
+    return re.sub(pattern, " ", text)
+
+
+def remove_tag_html(data: List[str]) -> List[str]:
+    return [f_remove_tag_html(text) for text in data]
 
 
 @lru_cache(maxsize=None)
@@ -160,11 +171,30 @@ def remove_non_latin(data: List[str]) -> List[str]:
     return [f_remove_non_latin(text) for text in data]
 
 
+def f_remove_white_space(text: str) -> str:
+    pattern = re.compile(r"\s+")
+    return re.sub(pattern, " ", text).strip()
+
+
+def remove_white_space(data: List[str]) -> List[str]:
+    return [f_remove_white_space(text) for text in data]
+
+
+def f_remove_one_chars(token: Tuple[str]):
+    return (i for i in token if len(i) != 1)
+
+
+def remove_one_chars(tokens: List[Tuple[str]]):
+    if not any(isinstance(x, (list, tuple)) for x in tokens):
+        raise ValueError("text data must be tokenized first")
+    return [f_remove_one_chars(token) for token in tokens]
+
+
 F_TEXT_CLEAN = [
-    "remove_punctuation",
-    "remove_digits",
     "remove_url",
     "remove_emoji",
+    "remove_tag_html" "remove_punctuation",
+    "remove_digits",
     "remove_non_latin",
 ]
 
@@ -266,8 +296,10 @@ def text_clean(
     digits: bool = True,
     emoji: bool = True,
     duplicates: bool = True,
+    tag_html: bool = True,
     url: bool = True,
     non_latin: bool = True,
+    white_space: bool = True,
     return_token: bool = False,
     return_dataframe: bool = False,
     verbose: bool = False,
@@ -299,7 +331,7 @@ def text_clean(
     from tqdm import tqdm
 
     def maybe_tqdm(iterable, desc):
-        return tqdm(iterable, desc=desc) if verbose else iterable
+        return tqdm(iterable, desc=desc, colour="cyan") if verbose else iterable
 
     idx = None
     if duplicates:
@@ -320,6 +352,9 @@ def text_clean(
     if url:
         datac = remove_url(maybe_tqdm(datac, "Removing URLs"))
 
+    if tag_html:
+        datac = remove_tag_html(maybe_tqdm(datac, "Removing Tag HTML"))
+
     if punctuation:
         datac = remove_punctuation(
             maybe_tqdm(datac, "Removing Punctuation"), punctuation=punctuation
@@ -330,6 +365,9 @@ def text_clean(
 
     if non_latin:
         datac = remove_non_latin(maybe_tqdm(datac, "Removing Non-Latin Characters"))
+
+    if white_space:
+        datac = remove_white_space(maybe_tqdm(datac, "Removing White Space"))
 
     if return_token:
         datac = word_tokenize(maybe_tqdm(datac, "Tokenizing"), pattern=pattern)
@@ -393,6 +431,7 @@ def remove_stopwords(
     lang: str,
     stopwords: Optional[List[str]] = None,
     additional: Optional[List[str]] = None,
+    stop_one_chars: bool = True,
     return_token: bool = True,
     verbose: bool = False,
 ) -> Union[List[str], List[Tuple[str]]]:
@@ -423,6 +462,9 @@ def remove_stopwords(
             raise ValueError("lang not found !")
         if additional:
             stopwords += additional
+
+    if stop_one_chars:
+        tokens = remove_one_chars(tokens)
 
     return [
         f_stopwords(token=x, stopwords=set(stopwords), return_token=return_token)
@@ -655,7 +697,7 @@ def lemmatization(
             return lemmatizer.lemmatize(word)
 
         def __lemma_sentence(sentence):
-            lemmatized = [__lemma_word(word) for word in sentence]
+            lemmatized = tuple(__lemma_word(word) for word in sentence)
             if return_token:
                 return lemmatized
             return " ".join(lemmatized)
@@ -790,306 +832,6 @@ def text_manipulation(
     return datac
 
 
-class Tokenizer:
-    """
-    A class to tokenize text data, transform it into sequences, and pad sequences.
-
-    Attributes:
-        min_count : Minimum frequency count for words to be included in the vocabulary.
-        filters : Characters to filter out from the text.
-        oov_token : Token to use for out-of-vocabulary words.
-        maxlen : Maximum length of sequences. If 0, it will be calculated based on the data.
-        padding : Padding type ("pre" or "post").
-        truncating : Truncating type ("pre" or "post").
-        value : Value used for padding.
-        dtype : Data type of the padded sequences.
-
-    Methods:
-        fit(data: Union[List[str], List[Tuple[str]]], y=None)
-            Fits the tokenizer on the given data.
-        transform(data)
-            Transforms the given data into padded sequences.
-        encode(text: str) -> list
-            Encodes a single text string into a sequence of integers.
-        decode(token: list) -> str
-            Decodes a sequence of integers back into a text string.
-        texts_to_sequences(text: list) -> list
-            Converts a list of text strings into sequences of integers.
-        sequences_to_texts(sequences: list) -> list
-            Converts a list of sequences of integers back into text strings.
-        sequences_to_pad(sequences: list)
-            Pads a list of sequences to the maximum length.
-        texts_to_pad_sequences(text: list)
-            Converts a list of text strings into padded sequences.
-
-    Properties:
-        word_index : A dictionary mapping words to their integer indices.
-        index_word : A dictionary mapping integer indices to their corresponding words.
-    """
-
-    def __init__(
-        self,
-        oov_token: str = None,
-        filters: Optional[str] = string.punctuation,
-        min_count: Optional[int] = None,
-        maxlen: int = 0,
-        padding: Literal["pre", "post"] = "pre",
-        truncating: Literal["pre", "post"] = "pre",
-        value: int = 0,
-        dtype="int32",
-    ):
-        """
-        Initializes the Tokenizer with the specified parameters.
-
-        Args:
-            oov_token : Token to use for out-of-vocabulary words (default is None).
-            filters : Characters to filter out from the text (default is string.punctuation).
-            min_count : Minimum frequency count for words to be included in the vocabulary (default is None).
-            maxlen : Maximum length of sequences (default is 0, which means it will be calculated based on the data).
-            padding : Padding type ("pre" or "post", default is "pre").
-            truncating : Truncating type ("pre" or "post", default is "pre").
-            value : Value used for padding (default is 0).
-            dtype : Data type of the padded sequences (default is "int32").
-        """
-        self.min_count = min_count
-        self.filters = filters
-        self.oov_token = oov_token
-        self.maxlen = maxlen
-        self.padding = padding
-        self.truncating = truncating
-        self.value = value
-        self.dtype = dtype
-
-    def fit(self, data: Union[List[str], List[Tuple[str]]], y=None):
-        """
-        Fits the tokenizer on the given data.
-
-        Args:
-            data : The input data to fit the tokenizer on.
-            y : Not used, present for compatibility with sklearn API.
-
-        Returns:
-            Tokenizer: The fitted Tokenizer object.
-        """
-        import pandas as pd
-
-        if isinstance(data, pd.DataFrame):
-            data = data.values.reshape(-1)
-        if self.filters:
-            data = remove_punctuation(data, punctuation=self.filters)
-        counter_words = count_words(
-            data, return_dataframe=True, min_count=self.min_count
-        )
-
-        words = counter_words.words.tolist()
-        self.words = words
-        start = 1
-        if self.oov_token:
-            words.insert(0, "<OOV>")
-            start = 0
-        key_to_index = {word: i for i, word in enumerate(words, start=start)}
-        self.__str_to_int = key_to_index
-        self.__int_to_str = {i: word for word, i in key_to_index.items()}
-
-        # Calculate maxlen if not provided
-        if self.maxlen == 0:
-            sequences = self.texts_to_sequences(data)
-            self.maxlen = max(len(seq) for seq in sequences)
-
-        return self
-
-    def transform(self, data):
-        """
-        Transforms the given data into padded sequences.
-
-        Args:
-            data : The input data to transform.
-
-        Returns:
-            np.ndarray: The transformed and padded sequences.
-        """
-        import pandas as pd
-
-        if isinstance(data, pd.DataFrame):
-            data = data.values.reshape(-1)
-        return self.texts_to_pad_sequences(data)
-
-    def encode(self, text: str) -> list:
-        """
-        Encodes a single text string into a sequence of integers.
-
-        Args:
-            text : The text string to encode.
-
-        Returns:
-            list: The encoded sequence of integers.
-        """
-        if self.oov_token:
-            return [
-                self.__str_to_int[token] if token in self.words else 0
-                for token in f_word_tokenize(text)
-            ]
-        else:
-            return [
-                self.__str_to_int[token]
-                for token in f_word_tokenize(text)
-                if token in self.words
-            ]
-
-    def decode(self, token: list) -> str:
-        """
-        Decodes a sequence of integers back into a text string.
-
-        Args:
-            token : The sequence of integers to decode.
-
-        Returns:
-            str: The decoded text string.
-        """
-        return " ".join([self.__int_to_str[t] for t in token if t in self.__int_to_str])
-
-    def texts_to_sequences(self, text: list) -> list:
-        """
-        Converts a list of text strings into sequences of integers.
-
-        Args:
-            text : The list of text strings to convert.
-
-        Returns:
-            list: The list of sequences of integers.
-        """
-        return [
-            self.encode(f_remove_punctuation(s, punctuation=self.filters)) for s in text
-        ]
-
-    def sequences_to_texts(self, sequences: list) -> list:
-        """
-        Converts a list of sequences of integers back into text strings.
-
-        Args:
-            sequences : The list of sequences of integers to convert.
-
-        Returns:
-            list: The list of decoded text strings.
-        """
-        return [self.decode(s) for s in sequences]
-
-    def sequences_to_pad(self, sequences: list):
-        """
-        Pads a list of sequences to the maximum length.
-
-        Args:
-            sequences : The list of sequences to pad.
-
-        Returns:
-            np.ndarray: The padded sequences.
-        """
-        import numpy as np
-
-        maxlen = self.maxlen
-
-        # Prepare the result array with the appropriate type and size
-        padded_sequences = np.full(
-            (len(sequences), maxlen), self.value, dtype=self.dtype
-        )
-
-        for i, seq in enumerate(sequences):
-            if self.truncating == "pre":
-                trunc = seq[-maxlen:]
-            elif self.truncating == "post":
-                trunc = seq[:maxlen]
-            else:
-                raise ValueError(f'Truncating type "{self.truncating}" not understood')
-
-            if self.padding == "pre":
-                padded_sequences[i, -len(trunc) :] = trunc
-            elif self.padding == "post":
-                padded_sequences[i, : len(trunc)] = trunc
-            else:
-                raise ValueError(f'Padding type "{self.padding}" not understood')
-
-        return padded_sequences
-
-    def texts_to_pad_sequences(self, text: list):
-        """
-        Converts a list of text strings into padded sequences.
-
-        Args:
-            text : The list of text strings to convert.
-
-        Returns:
-            np.ndarray: The padded sequences.
-        """
-        sequences = self.texts_to_sequences(text)
-        return self.sequences_to_pad(sequences)
-
-    @property
-    def word_index(self):
-        """
-        Returns the word-to-index dictionary.
-
-        Returns:
-            dict: The word-to-index dictionary.
-        """
-        return self.__str_to_int
-
-    @property
-    def index_word(self):
-        """
-        Returns the index-to-word dictionary.
-
-        Returns:
-            dict: The index-to-word dictionary.
-        """
-        return self.__int_to_str
-
-
-def count_words(
-    data: Union[List[str], List[Tuple[str]]],
-    min_count: Optional[int] = None,
-    return_dataframe: bool = False,
-):
-    """
-    Count the occurrences of words in a list of tokenized texts or strings.
-
-    Args:
-        data : List of tokenized texts (list of tuples or list of strings).
-        min_count : Minimum count threshold for words to be included in the result, by default None.
-        return_dataframe : Whether to return the result as a pandas DataFrame, by default False.
-
-    Returns:
-        Union[dict, pd.DataFrame]:
-            If return_dataframe is False, returns a dictionary where keys are words and values are counts.
-            If return_dataframe is True, returns a DataFrame with columns "words" and "counts".
-    """
-    from collections import Counter
-
-    if not any(isinstance(x, (list, tuple)) for x in data):
-        data = word_tokenize(data)
-
-    data = [element for row in data for element in row]
-
-    counter_words = Counter(data)
-    if min_count:
-        counter_words = {
-            word: count for word, count in counter_words.items() if count >= min_count
-        }
-        counter_words = dict(
-            sorted(counter_words.items(), key=lambda item: item[1], reverse=True)
-        )
-
-    if return_dataframe:
-        import pandas as pd
-
-        return pd.DataFrame(
-            {
-                "words": list(counter_words.keys()),
-                "counts": list(counter_words.values()),
-            }
-        ).sort_values(by=["counts"], ascending=False, ignore_index=True)
-    return counter_words
-
-
 __all__ = [
     "f_remove_punctuation",
     "remove_punctuation",
@@ -1122,6 +864,4 @@ __all__ = [
     "f_stemming_idn",
     "stemming",
     "text_manipulation",
-    "Tokenizer",
-    "count_words",
 ]
