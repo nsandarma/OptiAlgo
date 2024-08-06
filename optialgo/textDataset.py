@@ -67,6 +67,7 @@ class TextDataset:
         Returns:
             The transformed array.
         """
+        X = np.array(X) if not isinstance(X, np.ndarray) else X
         if X.ndim == 2:
             X = X.reshape(-1)
         return self.pipeline.transform(X).toarray()
@@ -139,7 +140,7 @@ class TextDataset:
         feature: str,
         target: Optional[str],
         t: Literal["classification", "regression"],
-        vectorizer: Union[Literal["tfidf", "count_vect"], Tokenizer] = "tfidf",
+        vectorizer: Union[Literal["tfidf", "count_vect"]] = "tfidf",
         ci: bool = False,
     ):
         """

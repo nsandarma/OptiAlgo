@@ -1,14 +1,5 @@
 from typing import Optional, Union, List, Tuple, Literal
 
-try:
-    from optialgo.text_preprocessing import (
-        word_tokenize,
-        f_word_tokenize,
-        f_regex_word_tokenize,
-        remove_punctuation,
-    )
-except ImportError:
-    pass
 from functools import lru_cache
 from itertools import chain
 from collections import Counter, defaultdict

@@ -633,6 +633,32 @@ def check_missing_value(dataframe):
     return False
 
 
+def random_split(
+    x: np.ndarray,
+    y: np.ndarray,
+    train_size: float,
+    random_state: int = 42,
+    return_sklearn_style=False,
+):
+    np.random.seed(random_state)
+    assert len(x) == len(y), f"len of (x) != len of (y)"
+    assert train_size <= 0.9 and train_size >= 0.6, "train_size is invalid !"
+    assert x.ndim < 3, "Not support !"
+    x = x.reshape(-1, 1) if x.ndim == 1 else x
+    y = y.reshape(-1, 1) if y.ndim == 1 else y
+
+    feature_shape = x.shape[1]
+    data = np.hstack([x, y])
+    np.random.shuffle(data)
+    n = int(train_size * len(x))
+    train, test = data[:n], data[n:]
+    X_train, y_train = train[:, :feature_shape], train[:, feature_shape:]
+    X_test, y_test = test[:, :feature_shape], test[:, feature_shape:]
+    if return_sklearn_style:
+        return X_train, X_test, y_train, y_test
+    return X_train, y_train, X_test, y_test
+
+
 __all__ = [
     "feature_selection",
     "feature_select_rfe",
@@ -648,4 +674,5 @@ __all__ = [
     "detect_outliers_zscore",
     "check_imbalance",
     "check_missing_value",
+    "random_split",
 ]

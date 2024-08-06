@@ -803,7 +803,7 @@ def text_manipulation(
     if stopwords:
         if stopwords is True:
             datac = remove_stopwords(
-                tokens,
+                datac,
                 lang=lang,
                 return_token=True,
                 verbose=verbose,
@@ -811,7 +811,7 @@ def text_manipulation(
             )
         else:
             datac = remove_stopwords(
-                tokens,
+                datac,
                 lang=lang,
                 return_token=True,
                 verbose=verbose,
