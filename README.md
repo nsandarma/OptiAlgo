@@ -16,7 +16,7 @@ Solusi yang cepat dan andal bagi pengguna yang ingin menemukan algoritma terbaik
 
 ---
 
-![image](https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/demo.gif)
+![image](https://raw.githubusercontent.com/nsandarma/OptiAlgo/master/images/optialgo.gif)
 
 ## Fitur
 1. Data Prepration
